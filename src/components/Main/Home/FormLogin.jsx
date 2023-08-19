@@ -1,4 +1,4 @@
-import {Link } from 'react-router';
+import {Link } from 'react-router-dom';
 
 export const FormLogin = () => {
     return <form className="form-login">
