@@ -3,7 +3,9 @@ import {Link} from 'react-router-dom'
 
 // eslint-disable-next-line react/prop-types
 export const Drawer = ({ viewDrawer, toggleDrawer }) => {
-    console.log(viewDrawer)
+
+    const handleLogOut = () => localStorage.removeItem('tokenAdmin');
+    
   return (
     <section className={`drawer ${viewDrawer && 'translate-0'}`}>
       <RxCross2 className='close-drawer'/>
@@ -11,7 +13,7 @@ export const Drawer = ({ viewDrawer, toggleDrawer }) => {
         <li onClick={toggleDrawer}><Link to="/pending">Pendings</Link></li>
         <li onClick={toggleDrawer}><Link to="/accepted">Accepted</Link></li>
         <li onClick={toggleDrawer}><Link to="/finished">Finished</Link></li>
-        <li onClick={toggleDrawer}><Link to="/">Logout</Link></li>
+        <li onClick={handleLogOut}><Link to="/">Logout</Link></li>
       </ul>
     </section>
   )

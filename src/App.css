@@ -208,7 +208,7 @@ body{
     color: #1573B9;
 }
 
-.form-login input:last-child{
+.form-login input:last-of-type{
     border:none;
     background-color: #1573B9;
     color:white;
@@ -218,8 +218,15 @@ body{
     transition: all 0.2s ease
 }
 
-.form-login input:last-child:hover{
+.form-login input:last-of-type:hover{
     background-color: #004478;
+}
+
+.loader{
+    color: #1573B9;
+    font-weight: bold;
+    font-style: italic;
+    font-size:20px;
 }
 
 /**PENDING**/
