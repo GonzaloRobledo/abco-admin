@@ -2,7 +2,7 @@
 export const ItemPending = ({toggleModal}) => {
     const deniedSelling = () => {
         const confirm = window.confirm('¿Are you secure that you want denied this selling?');
-        if(confirm) window.alert("CONFIRM")
+        if(confirm) window.alert("CONFIRM!")
         else window.alert("CANCEL")
     }
 
