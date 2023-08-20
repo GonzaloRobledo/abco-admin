@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
 import { Modal } from '../../../Modal/Modal'
-import { ItemPending } from './ItemPending'
-import { TitlesListPendings } from './TitlesListPendings'
 import { useNavigate } from 'react-router-dom'
-import { verifyTokenAdmin } from '../../../../api/auth/verifyTokenAdmin'
 import { Loader } from '../../../commons/Loader'
-import { getPendings } from '../../../../api/sellings/getPendings'
-import { InfoModalProfile } from './InfoModalProfile'
-import { InfoModalSale } from './InfoModalSale'
-import { InfoModalProduct } from './InfoModalProduct'
+import { getAccepted } from '../../../../api/sellings/getAccepted'
+import { ItemPending } from '../Pendings/ItemPending'
+import { InfoModalProfile } from '../Pendings/InfoModalProfile'
+import { InfoModalSale } from '../Pendings/InfoModalSale'
+import { InfoModalProduct } from '../Pendings/InfoModalProduct'
+import { verifyTokenAdmin } from '../../../../api/auth/verifyTokenAdmin'
+import { TitlesListPendings } from '../Pendings/TitlesListPendings'
 
-export const MainPendings = () => {
+export const MainAccepted = () => {
   const [visibleModal, setVisibleModal] = useState(false)
   const [infoModal, setInfoModal] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -33,8 +33,8 @@ export const MainPendings = () => {
   const verifyAdmin = async token => {
     const data = await verifyTokenAdmin(token)
     if (!data?.ok) navigate('/')
-    const pendingsData = await getPendings()
-    setPendings(pendingsData?.pendings.reverse() || [])
+    const pendingsData = await getAccepted()
+    setPendings(pendingsData?.accepted.reverse() || [])
     setLoading(false)
   }
 

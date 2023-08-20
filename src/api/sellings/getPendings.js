@@ -1,4 +1,4 @@
-export const getSellings = async () => {
+export const getPendings = async () => {
   try {
     const res = await fetch(
       `https://abco-backend-production-d635.up.railway.app/api/sellings/pendings`

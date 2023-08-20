@@ -1,6 +1,8 @@
 import { formatDate } from '../../../../utils/formatDate'
 import { DataShoe } from './DataShoe'
 import { DataUser } from './DataUser'
+import {AiOutlineCheck} from 'react-icons/ai'
+import { RxCross2 } from 'react-icons/rx'
 
 // eslint-disable-next-line react/prop-types
 export const ItemPending = ({ toggleModal, item }) => {
@@ -52,12 +54,14 @@ export const ItemPending = ({ toggleModal, item }) => {
       >
         Accept
       </button>
+      <button className='main-pendings_register_btnAccept_responsive'><AiOutlineCheck /></button>
       <button
         className='main-pendings_registers_btnDenied'
         onClick={deniedSelling}
       >
         Denied
       </button>
+      <button className='main-pendings_register_btnDenied_responsive'><RxCross2 /></button>
     </article>
   )
 }

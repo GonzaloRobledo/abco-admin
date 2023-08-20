@@ -28,12 +28,11 @@ export const DataShoe = ({ toggleModal, idProduct, idVariant }) => {
   }
 
   return (
-    <div className='main-pendings_registers_userData'>
+    <div className='main-pendings_registers_shoeData'>
       {loading ? (
         <p>Loading...</p>
       ) : (
         <>
-          <div className='main-pendings_registers_shoeData'>
             <h4>{product?.title}</h4>
             <div>
               <h5>S{variant?.size}</h5>
@@ -52,7 +51,6 @@ export const DataShoe = ({ toggleModal, idProduct, idVariant }) => {
             >
               View More
             </button>
-          </div>
         </>
       )}
     </div>

@@ -33,7 +33,7 @@ body{
     color:white;
     font-size:12px;
     font-weight: bold;
-    padding:10px 30px;
+    padding:10px;
     border-radius: 5px;
     border:none;
     outline:none;
@@ -261,20 +261,33 @@ body{
 }
 
 .main-pending h2{
-    margin:50px 0;
     font-size:32px;
+    margin-top:50px;
+}
+
+.total_registers{
+    margin:25px 0;
+    font-size:17px;
+    font-weight: bold;
+    color:#1573B9;
+}
+
+.total_registers span{
+    color: #FA6C2C;
 }
 
 .main-pendings_titles{
     display:flex;
     justify-content: space-between;
+    align-items: center;
     padding:20px 0;
     border-bottom:3px solid #1573B9;
 }
 
-.main-pendings_titles h3{
+.main-pendings_titles h3, .main-pendings_titles div{
     color:#1573B9;
     font-size:17px;
+    font-weight: bold;
 }
 
 .main-pendings_registers{
@@ -291,7 +304,7 @@ body{
 }
 
 .main-pendings_registers_userData,.main-pendings_titles_user{
-    flex-basis: calc(15% - 3px);
+    flex-basis: calc(10% - 3px);
     text-align: center;
 }
 
@@ -360,7 +373,7 @@ body{
 }
 
 .main-pendings_registers_date, .main-pendings_titles_date{
-    flex-basis: calc(10% - 3px);
+    flex-basis: calc(15% - 3px);
     text-align: center;
 }
 
@@ -376,7 +389,7 @@ body{
 }
 
 .main-pendings_registers_btnAccept, .main-pendings_registers_btnDenied{
-    padding:10px 20px;
+    padding:10px;
     background-color: green;
     color:white;
     border:none;
@@ -399,6 +412,51 @@ body{
     background-color: rgb(232, 0, 0);
 }
 
+.main-pendings_register_btnDenied_responsive, .main-pendings_register_btnAccept_responsive{
+    display:none;
+}
+
+@media (max-width: 1000px){
+    .main-pendings_registers_date, .main-pendings_titles_date{
+        display:none;
+    }
+    .main-pendings_registers_shoeData, .main-pendings_titles_item{
+        flex-basis: calc(40% - 3px);
+        text-align: center;
+    }
+    .main-pendings_registers_btnAccept, .main-pendings_registers_btnDenied{
+        display:none;
+    }
+    .main-pendings_register_btnDenied_responsive, .main-pendings_register_btnAccept_responsive,.main-pendings_titles_accept,.main-pendings_titles_denied{
+        display:block;
+        flex-basis: calc(4% - 3px);
+    }
+    .main-pendings_register_btnDenied_responsive, .main-pendings_register_btnAccept_responsive{
+        padding:5px;
+        border-radius: 100%;
+        border: none;
+        outline:none;
+        color:white;
+        font-size:17px;
+        background-color: green;
+    }
+    .main-pendings_register_btnDenied_responsive{
+        background-color: rgb(185, 0, 0);
+    }
+
+    .main-pendings_registers_userData, .main-pendings_titles_user{
+        flex-basis: calc(17% - 3px)
+    }
+}
+
+@media (max-width: 800px){
+    .main-pendings_registers_shoeData h4{
+        font-size:14px;
+    }
+    .main-pendings_registers_userSale h4{
+        font-size:14px;
+    }
+}
 
 /**=============FOOTER===============**/
 

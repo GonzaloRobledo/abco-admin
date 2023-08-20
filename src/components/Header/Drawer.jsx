@@ -8,7 +8,7 @@ export const Drawer = ({ viewDrawer, toggleDrawer }) => {
     
   return (
     <section className={`drawer ${viewDrawer && 'translate-0'}`}>
-      <RxCross2 className='close-drawer'/>
+      <RxCross2 className='close-drawer' onClick={toggleDrawer}/>
       <ul>
         <li onClick={toggleDrawer}><Link to="/pending">Pendings</Link></li>
         <li onClick={toggleDrawer}><Link to="/accepted">Accepted</Link></li>

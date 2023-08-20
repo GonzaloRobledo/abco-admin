@@ -1,7 +1,13 @@
+import { formatDate } from '../../../../utils/formatDate'
+
 // eslint-disable-next-line react/prop-types
 export const InfoModalSale = ({ data }) => {
   return (
     <ul>
+      <li>
+        <b>Created At: </b>
+        {formatDate(data?.createdAt)}
+      </li>
       <li>
         <b>User Email: </b>
         {data.user_id}
@@ -10,8 +16,7 @@ export const InfoModalSale = ({ data }) => {
         <b>User Payout: </b>${data.user_payout}
       </li>
       <li>
-        <b>Total Payout: </b>
-        ${data.total_payout}
+        <b>Total Payout: </b>${data.total_payout}
       </li>
       <li>
         <b>Where Sell: </b>

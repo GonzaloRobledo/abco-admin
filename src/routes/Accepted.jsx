@@ -1,5 +1,7 @@
+import { MainAccepted } from "../components/Main/App/Accepted/MainAccepted"
+
 const Accepted = () => {
-  return <div>Accepted</div>
+  return <MainAccepted />
 }
 
 export default Accepted
