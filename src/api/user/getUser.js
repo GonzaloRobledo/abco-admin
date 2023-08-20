@@ -1,24 +1,22 @@
-export const verifyTokenAdmin = async token => {
+export const getUser = async (email, token) => {
   try {
     const res = await fetch(
-      `https://abco-backend-production-d635.up.railway.app/api/auth/validTokenAdmin`,
+      `https://abco-backend-production-d635.up.railway.app/api/user/dataUser`,
       {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-type': 'application/json; charset=utf-8',
           Authorization: `Bearer ${token}`
-        }
+        },
+        body: JSON.stringify({ email })
       }
     )
-
     if (!res.ok) throw res
 
     const data = await res.json()
-
     return data
   } catch (e) {
-    const data = await e.json()
-    console.log({ dataError: data })
     console.log(e)
+    return null
   }
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { FormLogin } from './FormLogin'
-import { verifyTokenAdmin } from '../../../api/verifyTokenAdmin';
+import { verifyTokenAdmin } from '../../../api/auth/verifyTokenAdmin';
 import { useNavigate } from 'react-router-dom';
 import { Loader } from '../../commons/Loader';
 

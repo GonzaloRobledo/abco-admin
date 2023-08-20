@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {useNavigate} from 'react-router-dom'
-import { loginAdmin } from '../../../api/loginAdmin'
+import { loginAdmin } from '../../../api/auth/loginAdmin'
 
 const initialForm = {email:'', password:''}
 
