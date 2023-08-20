@@ -4,7 +4,6 @@ import { DataUser } from './DataUser'
 
 // eslint-disable-next-line react/prop-types
 export const ItemPending = ({ toggleModal, item }) => {
-  console.log(item)
   const deniedSelling = () => {
     const confirm = window.confirm(
       '¿Are you secure that you want denied this selling?'

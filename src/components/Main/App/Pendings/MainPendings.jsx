@@ -8,6 +8,7 @@ import { Loader } from '../../../commons/Loader'
 import { getSellings } from '../../../../api/sellings/getSellings'
 import { InfoModalProfile } from './InfoModalProfile'
 import { InfoModalSale } from './InfoModalSale'
+import { InfoModalProduct } from './InfoModalProduct'
 
 export const MainPendings = () => {
   const [visibleModal, setVisibleModal] = useState(false)
@@ -61,9 +62,9 @@ export const MainPendings = () => {
               <InfoModalProfile data={infoModal?.data} />
             ) : infoModal?.type === 'sale' ? (
               <InfoModalSale data={infoModal?.data} />
-            ) : (
-              <p>Sin data</p>
-            )}
+            ) : infoModal?.type === 'product' ? (
+              <InfoModalProduct data={infoModal?.data}/>
+            ) : <p>WithoutData</p>}
           </Modal>
         </section>
       )}
