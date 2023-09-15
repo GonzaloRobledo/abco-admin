@@ -143,6 +143,7 @@ body{
     border-left: 5px solid #1573B9;
     transform: translateX(100%);
     transition: all 0.5s ease;
+    z-index: 10000;
 }
 
 .drawer ul {
@@ -467,4 +468,191 @@ body{
     text-align: center;
     font-weight: bold;
     font-style: italic;
+}
+
+/**===================SELL NOW==================**/
+
+.input-search_sellNow{
+    text-align: center;
+    height: 50px;
+    display:flex;
+    justify-content: center;
+    position:relative;
+}
+
+.input-search_sellNow > input{
+    border:2px solid #FA6C2C;
+    border-right: none;
+    color: #004478;
+    font-size:15px;
+    padding:0 8px;
+    border-radius: 8px 0 0 8px;
+    max-width: 300px;
+    width: 100%;
+    outline:none;
+    height: 100%;
+}
+
+.input-search_sellNow_icon{
+    width:50px;
+    height: 100%;
+    background-color: #1573B9;
+    color:white;
+    display:inline-block;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+}
+
+.list_products{
+    list-style: none;
+    position:absolute;
+    max-width:800px;
+    width:100%;
+    border:2px solid #1573B9;
+    top:60px;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.list_products_header, .detail_product{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:20px;
+    border-bottom:2px solid #1573B9
+}
+
+.list_products_header{
+    background-color: gainsboro;
+}
+
+.list_products_header h3{
+    text-transform: uppercase;
+    color:#1573B9;
+    font-size:16px;
+}
+
+.detail_product{
+    background-color: #FA6C2C;
+}
+
+.detail_product h5{
+    font-style: italic;
+    font-size:15px;
+}
+
+.list_products_header h3, .detail_product h5, .detail_product div{
+    flex-basis: calc(20% - 10px);
+    text-align: center;
+}
+
+.list_products_header h3:first-child, .detail_product h5:first-child{
+    flex-basis: calc(40% - 10px);
+}
+
+.detail_product input{
+    display: block;
+    max-width:100px;
+    margin:0 auto;
+    padding: 0 10px;
+    height: 30px;
+    background-color: #1573B9;
+    border:2px solid white;
+    color:white;
+    outline:none;
+    border-radius: 5px;
+}
+
+.buttons_product{
+    padding:20px;
+    background-color: gainsboro
+}
+
+.buttons_product button{
+    margin:0 20px;
+    padding:8px 30px;
+    border-radius: 4px;
+    font-size:17px;
+    cursor: pointer;
+    border:none;
+    outline: none;
+    color:white;
+}
+
+.buttons_product button:hover{
+    opacity: 0.8;
+}
+
+.buttons_product button:first-child{
+    background-color: green;
+}
+
+.buttons_product button:last-child{
+    background-color: rgb(197, 0, 0);
+}
+
+.without_sell_now{
+    text-align: center;
+    margin-top:100px;
+    font-size:22px;
+    font-weight: 400;
+    color:#004478;
+}
+
+.list_sell_now{
+    list-style: none;
+    width:90;
+    margin:30px auto;
+}
+
+.list_sell_now li{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:12px 0;
+    border-bottom:1px solid gainsboro;
+}
+
+.list_sell_now li:first-child h5{
+    padding:10px 0;
+    color:white;
+    text-transform: uppercase;
+    background-color: #1573B9;
+}
+
+.list_sell_now li h5{
+    flex-basis: calc(20% - 2px);
+    text-align: center;
+}
+
+.list_sell_now li div{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    flex-basis: calc(20% - 2px);
+}
+
+.list_sell_now li div > *{
+    font-size:25px;
+    cursor: pointer;
+    margin:0 10px;
+}
+
+.list_sell_now li div > *:first-child{
+    color:#1573B9;
+}
+
+.list_sell_now li div > *:last-child{
+    color: rgb(185, 0, 0);
+}
+
+.not_found{
+    text-align: center;
+    margin-top:32px;
+    color:#FA6C2C;
+    font-weight: bold;
 }

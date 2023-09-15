@@ -6,6 +6,7 @@ import Pendings from './routes/Pendings'
 import Finished from './routes/Finished'
 import { Footer } from './components/Footer/Footer'
 import { Header } from './components/Header/Header'
+import SellNow from './routes/SellNow'
 
 function App () {
   return (
@@ -16,6 +17,7 @@ function App () {
         <Route path='/pending' element={<Pendings />} />
         <Route path='/accepted' element={<Accepted />} />
         <Route path='/finished' element={<Finished />} />
+        <Route path='/sell-now' element={<SellNow />} />
       </Routes>
       <Footer />
     </HashRouter>

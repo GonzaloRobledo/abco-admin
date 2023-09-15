@@ -1,6 +1,6 @@
 // eslint-disable-next-line react/prop-types
 export const InfoModalProduct = ({ data }) => {
-    console.log(data);
+    // console.log(data);
     return (
       <ul>
         <li style={{display:'flex',alignItems:'center'}}><b>Image: </b><img src={data?.image?.src || data?.images[0]?.src} alt={data.title} style={{width:64, height:64, borderRadius:'100%', border:'3px solid #1573B9', marginLeft:15}}/></li>

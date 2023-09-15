@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 export const putAcceptSelling = async item => {
   try {
-    console.log({ item })
+    // console.log({ item })
     const res = await fetch(
       `https://abco-backend-production-d635.up.railway.app/api/sellings/accept`,
       {
