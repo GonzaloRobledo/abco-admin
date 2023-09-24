@@ -21,6 +21,9 @@ export const Drawer = ({ viewDrawer, toggleDrawer }) => {
         <li onClick={toggleDrawer}>
           <Link to='/sell-now'>Sell Now</Link>
         </li>
+        <li onClick={toggleDrawer}>
+          <Link to='/locations'>Locations</Link>
+        </li>
         <li onClick={handleLogOut}>
           <Link to='/'>Logout</Link>
         </li>

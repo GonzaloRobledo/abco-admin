@@ -7,6 +7,7 @@ import Finished from './routes/Finished'
 import { Footer } from './components/Footer/Footer'
 import { Header } from './components/Header/Header'
 import SellNow from './routes/SellNow'
+import Locations from './routes/Locations'
 
 function App () {
   return (
@@ -18,6 +19,7 @@ function App () {
         <Route path='/accepted' element={<Accepted />} />
         <Route path='/finished' element={<Finished />} />
         <Route path='/sell-now' element={<SellNow />} />
+        <Route path='/locations' element={<Locations />} />
       </Routes>
       <Footer />
     </HashRouter>
