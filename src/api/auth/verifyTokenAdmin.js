@@ -1,7 +1,7 @@
 export const verifyTokenAdmin = async token => {
   try {
     const res = await fetch(
-      `https://abco-backend-production-d635.up.railway.app/api/auth/validTokenAdmin`,
+      `https://abco-backend-production-52fd.up.railway.app/api/auth/validTokenAdmin`,
       {
         method: 'GET',
         headers: {

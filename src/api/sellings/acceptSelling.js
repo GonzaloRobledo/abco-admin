@@ -3,7 +3,7 @@ export const putAcceptSelling = async item => {
   try {
     // console.log({ item })
     const res = await fetch(
-      `https://abco-backend-production-d635.up.railway.app/api/sellings/accept`,
+      `https://abco-backend-production-52fd.up.railway.app/api/sellings/accept`,
       {
         method: 'PUT',
         headers: { 'Content-type': 'application/json; charset=utf-8' },

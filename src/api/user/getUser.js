@@ -1,7 +1,7 @@
 export const getUser = async (email, token) => {
   try {
     const res = await fetch(
-      `https://abco-backend-production-d635.up.railway.app/api/user/dataUser`,
+      `https://abco-backend-production-52fd.up.railway.app/api/user/dataUser`,
       {
         method: 'POST',
         headers: {

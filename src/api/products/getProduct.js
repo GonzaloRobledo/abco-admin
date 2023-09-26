@@ -1,7 +1,7 @@
 export const getProduct = async (id, token) => {
   try {
     const res = await fetch(
-      `https://abco-backend-production-d635.up.railway.app/api/product/${id}`,
+      `https://abco-backend-production-52fd.up.railway.app/api/product/${id}`,
       {
         method: 'GET',
         headers: {

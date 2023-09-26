@@ -1,7 +1,7 @@
 export const getAllProducts = async () => {
   try {
     const res = await fetch(
-      `https://abco-backend-production-d635.up.railway.app/api/products/`
+      `https://abco-backend-production-52fd.up.railway.app/api/products/`
     )
 
     if (!res.ok) throw res

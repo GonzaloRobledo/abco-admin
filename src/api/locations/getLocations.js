@@ -1,7 +1,7 @@
 export const getLocations = async token => {
   try {
     const res = await fetch(
-      `https://abco-backend-production-d635.up.railway.app/api/locations`,
+      `https://abco-backend-production-52fd.up.railway.app/api/locations`,
       {
         method: 'GET',
         headers: {

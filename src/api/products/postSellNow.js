@@ -2,7 +2,7 @@ export const postSellNow = async (token, data_product) => {
   console.log({ data_product })
   try {
     const res = await fetch(
-      `https://abco-backend-production-d635.up.railway.app/api/sellings/sellNow`,
+      `https://abco-backend-production-52fd.up.railway.app/api/sellings/sellNow`,
       {
         method: 'POST',
         headers: {
