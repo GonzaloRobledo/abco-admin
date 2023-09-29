@@ -8,6 +8,7 @@ import { Footer } from './components/Footer/Footer'
 import { Header } from './components/Header/Header'
 import SellNow from './routes/SellNow'
 import Locations from './routes/Locations'
+import RequestBack from './routes/RequestBack'
 
 function App () {
   return (
@@ -20,6 +21,7 @@ function App () {
         <Route path='/finished' element={<Finished />} />
         <Route path='/sell-now' element={<SellNow />} />
         <Route path='/locations' element={<Locations />} />
+        <Route path='/request-back' element={<RequestBack />} />
       </Routes>
       <Footer />
     </HashRouter>

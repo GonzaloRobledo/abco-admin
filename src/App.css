@@ -148,6 +148,8 @@ body{
 
 .drawer ul {
     list-style: none;
+    max-height: 95%;
+    overflow: auto;
 }
 
 .drawer ul li a{
@@ -774,4 +776,143 @@ body{
 .button_cancel_edit_location:hover{
     background-color: white !important;
     color: rgb(255, 108, 108) !important;
+}
+
+/**=========================REQUEST BACK===================**/
+
+.rb_title_filters{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top:50px;
+}
+
+.rb_title_filters h2{
+    margin-top:0
+}
+
+.rb_title_filters__filters input, .rb_title_filters__filters select{
+    display: block;
+    width:300px;
+}
+
+.rb_title_filters__filters input{
+    padding:10px;
+    border: 3px solid #FA6C2C;
+    color:#004478;
+    font-weight: bold;
+    outline:none;
+    border-radius: 24px;
+}
+
+.rb_title_filters__filters select{
+    padding:10px;
+    margin-top:10px;
+    border:3px solid #004478;
+    color:#FA6C2C;
+    font-weight: bold;
+    outline: none;
+    border-radius: 24px;
+}
+
+.request_back_titles{
+    display:flex;
+    align-items: flex-end;
+    padding-bottom:10px;
+    border-bottom:3px solid #222;
+}
+
+.request_back_titles h4{
+    width:100px;
+    text-align: center;
+    text-transform: uppercase;
+    font-size:14px;
+}
+
+.request_back_titles h4:nth-child(2){
+    width:350px;
+}
+
+.request_back_titles h4:nth-child(7){
+    width:350px;
+}
+
+.item_request_back{
+    display:flex;
+    align-items: center;
+    padding:10px 0;
+    border-bottom: 1px solid gainsboro;
+}
+
+.item_request_back > *{
+    width:100px;
+    text-align: center;
+}
+
+.item_request_back > *:nth-child(2){
+    width:350px;
+    text-align: left;
+}
+
+.item_request_back > *:nth-child(7){
+    width:350px;
+    text-align: left;
+}
+
+.edit_item_request{
+    color: #004478;
+    text-align: center;
+    font-size:20px;
+    margin-left:10px;
+    cursor: pointer;
+}
+
+.edit_transport textarea{
+    width:100%;
+    resize:none;
+    outline:none;
+    border:2px solid #FA6C2C;
+    border-radius: 4px;
+    margin-right: 10px;
+    padding:10px;
+    height: 100px;
+    color: #004478;
+    font-size:14px;
+    font-weight: bold;
+}
+
+.edit_transport > div{
+    display: flex;
+    justify-content: space-between;
+}
+
+.edit_transport button:first-child{
+    width: 100%;
+    border:2px solid #004478;
+    outline:none;
+    color:white;
+    text-transform: uppercase;
+    background-color: #004478;
+    padding:10px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.edit_transport button:first-child:hover{
+    background-color: inherit;
+    color: #004478
+}
+
+.edit_transport button:last-child{
+    background-color: rgb(197, 0, 0);
+    color:white;
+    margin-left: 5px;
+    padding:0 20px;
+    border-radius: 4px;
+    border:none;
+    outline: none;
+    font-weight: bold;
+    cursor: pointer;
 }

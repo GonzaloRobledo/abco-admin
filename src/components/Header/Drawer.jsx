@@ -19,6 +19,9 @@ export const Drawer = ({ viewDrawer, toggleDrawer }) => {
           <Link to='/finished'>Finished</Link>
         </li>
         <li onClick={toggleDrawer}>
+          <Link to='/request-back'>Requests Back</Link>
+        </li>
+        <li onClick={toggleDrawer}>
           <Link to='/sell-now'>Sell Now</Link>
         </li>
         <li onClick={toggleDrawer}>
