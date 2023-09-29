@@ -10,6 +10,7 @@ export const MainRequestBack = () => {
   const navigate = useNavigate()
   const [requestBack, setRequestBack] = useState([]);
   const [filterRequestBack, setFilterRequestBack] = useState([]);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem('tokenAdmin')
@@ -33,6 +34,12 @@ export const MainRequestBack = () => {
     setFilterRequestBack(requestBack || [])
   },[requestBack])
 
+  useEffect(() => {
+    const unique_users = new Set();
+    filterRequestBack?.forEach(el => unique_users?.add(el.selling.user_id))
+    setUsers([...unique_users])
+  },[filterRequestBack])
+
   return (
     <>
       {loading ? (
@@ -46,7 +53,8 @@ export const MainRequestBack = () => {
             <div className="rb_title_filters__filters">
               <input type='text' placeholder='SKU, Email or Title' />
               <select>
-                <option>Email 1</option>
+                <option>Select user</option>
+                {users?.map(el => <option key={el} style={{padding:10}}>{el}</option>)}
               </select>
             </div>
           </div>
@@ -58,7 +66,7 @@ export const MainRequestBack = () => {
                   <div className="request_back_titles">
                     <h4>-</h4>
                     <h4>Item</h4>
-                    <h4>Expired</h4>
+                    <h4 >Tracking #</h4>
                     <h4>Fees Payment</h4>
                     <h4>Shipping Payment</h4>
                     <h4>Total Payment</h4>
@@ -67,7 +75,7 @@ export const MainRequestBack = () => {
         
                     {/*ITEMS*/}
                   <ul>
-                    {filterRequestBack?.map(el => <ItemRequestBack key={el._id} item={el}/>)}
+                    {filterRequestBack?.map(el => <ItemRequestBack key={el._id} item={el} setRequestBack={setRequestBack} requestBack={requestBack}/>)}
                   </ul>
              </div>
           </div>
