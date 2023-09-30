@@ -46,6 +46,40 @@ body{
 
 /**MODAL**/
 
+.modal_commons{
+    position:fixed;
+    top:0;
+    left:0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.85);
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal_commons > div{
+    background-color: white;
+    border-radius: 24px;
+    border:3px solid #1573B9;
+    padding:24px;
+    position: relative;
+    max-width: 800px;
+    max-height: 80%;
+    overflow: auto;
+    margin:0 32px;
+
+}
+
+.modal_commons_close{
+    color:#1573B9;
+    font-weight: bold;
+    font-size:22px;
+    position:absolute;
+    top:24px;
+    right: 24px;
+    cursor: pointer;
+}
+
 .modal{
     background-color: rgba(0,0,0,0.85);
     position:fixed;
@@ -855,7 +889,12 @@ body{
 
 
 .request_back_titles h4:nth-child(7){
-    width:350px;
+    width:250px;
+}
+
+.request_back_titles h4:nth-child(8){
+    width:150px;
+    margin-left:30px;
 }
 
 .item_request_back{
@@ -880,8 +919,30 @@ body{
 }
 
 .item_request_back > *:nth-child(7){
-    width:350px;
+    width:250px;
     text-align: left;
+}
+
+.item_request_back > *:nth-child(8){
+    width:150px;
+    margin-left:30px;
+}
+
+.btn_create_order{
+    background-color: #1573B9;
+    color:white;
+    width:100%;
+    padding:10px;
+    cursor: pointer;
+    border:3px solid #1573B9;
+    outline: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-weight: bold;
+}
+.btn_create_order:hover{
+    background-color: white;
+    color:#1573B9;
 }
 
 .sku_vendor{
@@ -983,4 +1044,54 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+
+/**=============CREATE ORDER===========**/
+
+.data_create_order{
+    text-align: left;
+    padding-top:50px
+}
+
+.data_create_order h4{
+    font-size:20px;
+    color:#004478;
+}
+
+.data_create_order > div{
+    display: flex;
+    align-items: center;
+    margin:15px 0;
+}
+
+.data_create_order > div h5{
+    color:#1573B9;
+    margin-right: 10px;
+    font-size:18px;
+}
+
+.btns_data_create_order{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btns_data_create_order button{
+    padding:12px 40px;
+    margin-left: 10px;
+    outline:none;
+    border:none;
+    color:white;
+    font-size:16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.btns_data_create_order button:first-child{
+    background-color: rgb(232, 0, 0);
+}
+
+.btns_data_create_order button:last-child{
+    background-color: green;
 }

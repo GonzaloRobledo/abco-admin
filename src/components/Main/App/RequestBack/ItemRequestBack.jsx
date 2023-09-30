@@ -1,11 +1,15 @@
 import { useState } from 'react'
 import { AiOutlineEdit } from 'react-icons/ai'
 import { updateRequestBack } from '../../../../api/requestBack/updateRequestBack'
+import { Modal } from '../../../commons/Modal'
+import { createOrder } from '../../../../api/shopify/createOrder'
 
 export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   const [editShipping, setEditShipping] = useState(null)
   const [editTransport, setEditTransport] = useState(null)
   const [editTracking, setEditTracking] = useState(null)
+  const [viewModal, setViewModal] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const selling = item?.selling
   const prod = item?.selling?.product
@@ -16,7 +20,10 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   const token = localStorage.getItem('tokenAdmin')
 
   const handleEditTransport = async () => {
-    const res = await updateRequestBack(token, { data_company: editTransport,_id: item?._id })
+    const res = await updateRequestBack(token, {
+      data_company: editTransport,
+      _id: item?._id
+    })
     if (res?.ok) {
       const new_request = requestBack?.map(el =>
         el._id == item?._id ? { ...el, data_company: editTransport } : el
@@ -31,7 +38,10 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
     const number = parseFloat(editShipping)
     console.log({ number })
     if (!isNaN(number)) {
-      const res = await updateRequestBack(token, { amount_to_shipping: number,_id: item?._id })
+      const res = await updateRequestBack(token, {
+        amount_to_shipping: number,
+        _id: item?._id
+      })
 
       if (res?.ok) {
         const new_request = requestBack?.map(el =>
@@ -47,7 +57,10 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   }
 
   const handleEditTracking = async () => {
-    const res = await updateRequestBack(token, { tracking_admin: editTracking, _id: item?._id })
+    const res = await updateRequestBack(token, {
+      tracking_admin: editTracking,
+      _id: item?._id
+    })
     if (res?.ok) {
       const new_request = requestBack?.map(el =>
         el._id == item?._id ? { ...el, tracking_admin: editTracking } : el
@@ -55,12 +68,29 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
       setRequestBack(new_request)
       setEditTracking(null)
     }
-    console.log({res});
+    console.log({ res })
   }
 
-  //   useEffect(() => {
-  //     console.log({ editShipping, editTransport })
-  //   }, [editShipping, editTransport])
+  const handleToggleModal = async () => setViewModal(!viewModal)
+
+  const handleCreateOrder = async () => {
+    setLoading(true)
+    const confirm = window.confirm(
+      'Are you sure that you want create this order?'
+    )
+    if (confirm) {
+      const token = localStorage.getItem('tokenAdmin')
+      const res = await createOrder(token, {
+        shipping: item?.amount_to_shipping,
+        fees: item?.fees,
+        data_company: item?.data_company,
+        email: selling?.user_id
+      })
+      if (res?.ok) window.alert('CREATE SUCCESSFUL!')
+      console.log({ res })
+    } else window.alert('NOT CONFIRM :(')
+    setLoading(false)
+  }
 
   return (
     <li className='item_request_back'>
@@ -148,7 +178,13 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
             justifyContent: 'space-between'
           }}
         >
-          {item?.data_company ? <p style={{color:'#004478', fontSize:14}}>{item?.data_company}</p> : <p style={{color:'rgb(209, 208, 208)', fontSize:14}}>Empty</p>}
+          {item?.data_company ? (
+            <p style={{ color: '#004478', fontSize: 14 }}>
+              {item?.data_company}
+            </p>
+          ) : (
+            <p style={{ color: 'rgb(209, 208, 208)', fontSize: 14 }}>Empty</p>
+          )}
           <AiOutlineEdit
             className='edit_item_request'
             onClick={() => setEditTransport(item?.data_company)}
@@ -166,6 +202,54 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
           </div>
         </div>
       )}
+
+      <div>
+        <button className='btn_create_order' onClick={handleToggleModal}>
+          Create Order
+        </button>
+        <Modal viewModal={viewModal} handleToggleModal={handleToggleModal}>
+          <div className='data_create_order'>
+            <h4>
+              Are you sure that you want create an order with the next data?
+            </h4>
+            <div>
+              <h5>Product: </h5>
+              <p>{prod?.title}</p>
+            </div>
+            <div>
+              <h5>Variant: </h5>
+              <p>
+                SKU: {variant?.SKU} {'//'} SIZE: {variant?.size}
+              </p>
+            </div>
+            <div
+              style={{ paddingBottom: 12, borderBottom: '1px solid gainsboro' }}
+            >
+              <h5>User: </h5>
+              <p>{selling?.user_id}</p>
+            </div>
+            <div>
+              <h5>Shipping: </h5>
+              <p>${item?.amount_to_shipping}</p>
+            </div>
+            <div>
+              <h5>Fees: </h5>
+              <p>${item?.fees}</p>
+            </div>
+            <div>
+              <h5>Total: </h5>
+              <p>${item?.fees + item?.amount_to_shipping}</p>
+            </div>
+
+            <div className='btns_data_create_order'>
+              <button onClick={handleToggleModal}>Cancel</button>
+              <button onClick={handleCreateOrder}>
+                {!loading ? 'Accept' : 'Loading...'}
+              </button>
+            </div>
+          </div>
+        </Modal>
+      </div>
     </li>
   )
 }
