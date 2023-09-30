@@ -511,9 +511,9 @@ body{
 .list_products{
     list-style: none;
     position:absolute;
-    max-width:800px;
+    max-width:1000px;
     width:100%;
-    border:2px solid #1573B9;
+    border:3px solid #1573B9;
     top:60px;
     background-color: white;
     border-radius: 8px;
@@ -657,6 +657,22 @@ body{
     margin-top:32px;
     color:#FA6C2C;
     font-weight: bold;
+}
+.product_size_sellNow{
+    display: block !important;
+}
+.product_size_sellNow h5{
+    font-size:16px !important;
+    color:#222 !important;
+}
+
+.product_size_sellNow p{
+    font-size:20px !important;
+    text-align: center;
+    margin-top:15px !important;
+    font-weight: bold;
+    color: #FA6C2C !important;
+
 }
 
 /**====================LOCATIONS==================**/

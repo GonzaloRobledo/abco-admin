@@ -16,6 +16,7 @@ export const MainSellNow = () => {
   const [product, setProduct] = useState('')
   const [valueInput, setValueInput] = useState('')
   const [price, setPrice] = useState(0)
+  const [quantity, setQuantity] = useState(0)
 
   useEffect(() => {
     const token = localStorage.getItem('tokenAdmin')
@@ -39,7 +40,7 @@ export const MainSellNow = () => {
       products.forEach(el => {
         if (el.is_sell_now)
           el.variants?.forEach(variant => {
-            if (variant.price_sell_now > 0)
+            if (variant.sell_now?.price > 0 && variant.sell_now?.quantity > 0)
               sellNows.push({ ...variant, title: el.title, product_id: el.product_id })
           })
       })
@@ -77,35 +78,39 @@ export const MainSellNow = () => {
   }
 
   const hadleAccept = async () => {
-    if (price !== 0) {
+    if (price != 0 && quantity != 0) {
       const token = localStorage.getItem('tokenAdmin')
       const data = {
         product_id: product?.product_id,
         variant_id: product?.variant_id,
-        price: price
+        price: price,
+        quantity: quantity
       }
       const res = await postSellNow(token, data)
       if (res.ok) {
         const some = sellNow?.some(el => el.SKU == product?.SKU)
         if (some) {
           const edit = sellNow?.map(el =>
-            el.SKU == product?.SKU ? { ...el, price_sell_now: price } : el
+            el.SKU == product?.SKU ? { ...el, sell_now: {price, quantity} } : el
           )
           setSellNow(edit)
         } else {
-          setSellNow([...sellNow, { ...product, price_sell_now: price }])
+          setSellNow([...sellNow, { ...product, sell_now: {price, quantity} }])
         }
         setProduct('')
         setValueInput('')
         setPrice(0)
       } else console.log('Error setSellNow!')
+    }else{
+        window.alert("Price or Quantity is 0!")
     }
   }
 
   const handleEdit = el => {
     setValueInput(el?.SKU)
     handleSearch(el?.SKU)
-    setPrice(el?.price_sell_now)
+    setPrice(el?.sell_now?.price)
+    setQuantity(el?.sell_now?.quantity);
   }
 
   const handleDelete = async el => {
@@ -156,6 +161,7 @@ export const MainSellNow = () => {
                   <h3>SKU</h3>
                   <h3>Size</h3>
                   <h3>Price</h3>
+                  <h3>Quantity</h3>
                 </li>
                 <li className='detail_product'>
                   <h5>{product?.title}</h5>
@@ -167,6 +173,14 @@ export const MainSellNow = () => {
                       placeholder='0'
                       value={price}
                       onChange={e => setPrice(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type='number'
+                      placeholder='0'
+                      value={quantity}
+                      onChange={e => setQuantity(e.target.value)}
                     />
                   </div>
                 </li>
@@ -187,16 +201,16 @@ export const MainSellNow = () => {
                 <li>
                   <h5>Title</h5>
                   <h5>SKU</h5>
-                  <h5>Size</h5>
+                  <h5>Quantity Sell Now</h5>
                   <h5>Price Sell Now</h5>
                   <h5>Action</h5>
                 </li>
                 {sellNow.map(el => (
                   <li key={el.SKU}>
-                    <h5>{el.title}</h5>
+                    <div className="product_size_sellNow"><h5>{el.title}</h5><p>{el.size}</p></div>
                     <h5>{el.SKU}</h5>
-                    <h5>{el.size}</h5>
-                    <h5>${el.price_sell_now}</h5>
+                    <h5>{el.sell_now?.quantity}</h5>
+                    <h5>${el.sell_now?.price}</h5>
                     <div>
                       <BiEditAlt onClick={() => handleEdit(el)} />
                       <MdDeleteForever onClick={() => handleDelete(el)} />
