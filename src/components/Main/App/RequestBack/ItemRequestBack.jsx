@@ -111,9 +111,10 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
           <p>{createdAt}</p>
         </div>
         <h5 style={{ color: '#004478', fontSize: 16 }}>{selling?.user_id}</h5>
+        <h6 className="type_request" style={{color: item?.type_request == 'pickup' ? '#FA6C2C': '#06a4a9'}}>{item?.type_request}</h6>
       </div>
 
-      {editTracking === null ? (
+      {item?.type_request == 'shipping' ? (editTracking === null ? (
         <div className='tracking'>
           <p>{item?.tracking_admin}</p>
           <AiOutlineEdit
@@ -132,13 +133,13 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
             <button onClick={() => setEditTracking(null)}>X</button>
           </div>
         </div>
-      )}
+      )) : <p>NO</p>}
 
       <div>
         <p>${item?.fees}</p>
       </div>
 
-      {editShipping === null ? (
+      {item?.type_request == 'shipping' ? (editShipping === null ? (
         <div
           style={{
             display: 'flex',
@@ -164,13 +165,13 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
             <button onClick={() => setEditShipping(null)}>X</button>
           </div>
         </div>
-      )}
+      )) : <p>NO</p>}
 
       <div>
         <p>${item?.fees + item?.amount_to_shipping}</p>
       </div>
 
-      {editTransport === null ? (
+      {item?.type_request == 'shipping' ? (editTransport === null ? (
         <div
           style={{
             display: 'flex',
@@ -201,7 +202,11 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
             <button onClick={() => setEditTransport(null)}>X</button>
           </div>
         </div>
-      )}
+      )) : <p style={{textAlign:'center'}}>NO</p>}
+
+      <div>
+        {item?.type_request == 'pickup' ? <p>{item?.date}</p> : 'NO'}
+      </div>
 
       <div>
         <button className='btn_create_order' onClick={handleToggleModal}>
