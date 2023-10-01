@@ -31,14 +31,11 @@ export const MainRequestBack = () => {
   }
 
   useEffect(() => {
+    const unique_users = new Set()
+    requestBack?.forEach(el => unique_users?.add(el.selling.user_id))
+    setUsers([...unique_users])
     setFilterRequestBack([...requestBack]?.reverse() || [])
   }, [requestBack])
-
-  useEffect(() => {
-    const unique_users = new Set()
-    filterRequestBack?.forEach(el => unique_users?.add(el.selling.user_id))
-    setUsers([...unique_users])
-  }, [filterRequestBack])
 
   useEffect(() => {
     if (
