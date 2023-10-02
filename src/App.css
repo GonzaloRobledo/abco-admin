@@ -1072,6 +1072,16 @@ body{
     font-size:18px;
 }
 
+.textarea_createOrder{
+    width:100%;
+    height: 50px;
+    padding:15px;
+    resize:none;
+    border:1px solid #FA6C2C;
+    font-weight: bold;
+    font-size:14px;
+    color: #004478;
+}
 
 /**=============CREATE ORDER===========**/
 

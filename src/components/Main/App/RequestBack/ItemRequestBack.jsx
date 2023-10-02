@@ -10,6 +10,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   const [editTracking, setEditTracking] = useState(null)
   const [viewModal, setViewModal] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [note, setNote] = useState('')
 
   const selling = item?.selling
   const prod = item?.selling?.product
@@ -84,9 +85,13 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
         shipping: item?.amount_to_shipping,
         fees: item?.fees,
         data_company: item?.data_company,
-        email: selling?.user_id
+        email: selling?.user_id,
+        note
       })
-      if (res?.ok) window.alert('CREATE SUCCESSFUL!')
+      if (res?.ok) {
+        window.alert('CREATE SUCCESSFUL!')
+        console.log(res.order?.body)
+      }
       console.log({ res })
     } else window.alert('NOT CONFIRM :(')
     setLoading(false)
@@ -111,102 +116,119 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
           <p>{createdAt}</p>
         </div>
         <h5 style={{ color: '#004478', fontSize: 16 }}>{selling?.user_id}</h5>
-        <h6 className="type_request" style={{color: item?.type_request == 'pickup' ? '#FA6C2C': '#06a4a9'}}>{item?.type_request}</h6>
+        <h6
+          className='type_request'
+          style={{
+            color: item?.type_request == 'pickup' ? '#FA6C2C' : '#06a4a9'
+          }}
+        >
+          {item?.type_request}
+        </h6>
       </div>
 
-      {item?.type_request == 'shipping' ? (editTracking === null ? (
-        <div className='tracking'>
-          <p>{item?.tracking_admin}</p>
-          <AiOutlineEdit
-            className='edit_item_request'
-            onClick={() => setEditTracking(item?.tracking_admin)}
-          />
-        </div>
-      ) : (
-        <div className='edit_shipping edit_transport'>
-          <input
-            value={editTracking}
-            onChange={e => setEditTracking(e.target.value)}
-          />
-          <div>
-            <button onClick={handleEditTracking}>Save</button>
-            <button onClick={() => setEditTracking(null)}>X</button>
+      {item?.type_request == 'shipping' ? (
+        editTracking === null ? (
+          <div className='tracking'>
+            <p>{item?.tracking_admin}</p>
+            <AiOutlineEdit
+              className='edit_item_request'
+              onClick={() => setEditTracking(item?.tracking_admin)}
+            />
           </div>
-        </div>
-      )) : <p>NO</p>}
+        ) : (
+          <div className='edit_shipping edit_transport'>
+            <input
+              value={editTracking}
+              onChange={e => setEditTracking(e.target.value)}
+            />
+            <div>
+              <button onClick={handleEditTracking}>Save</button>
+              <button onClick={() => setEditTracking(null)}>X</button>
+            </div>
+          </div>
+        )
+      ) : (
+        <p>NO</p>
+      )}
 
       <div>
         <p>${item?.fees}</p>
       </div>
 
-      {item?.type_request == 'shipping' ? (editShipping === null ? (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <p>${item?.amount_to_shipping}</p>
-          <AiOutlineEdit
-            className='edit_item_request'
-            onClick={() => setEditShipping(item?.amount_to_shipping)}
-          />
-        </div>
-      ) : (
-        <div className='edit_transport edit_shipping'>
-          <input
-            type='text'
-            value={editShipping}
-            onChange={e => setEditShipping(e.target.value)}
-          />
-          <div>
-            <button onClick={handleEditShipping}>Save</button>
-            <button onClick={() => setEditShipping(null)}>X</button>
+      {item?.type_request == 'shipping' ? (
+        editShipping === null ? (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <p>${item?.amount_to_shipping}</p>
+            <AiOutlineEdit
+              className='edit_item_request'
+              onClick={() => setEditShipping(item?.amount_to_shipping)}
+            />
           </div>
-        </div>
-      )) : <p>NO</p>}
+        ) : (
+          <div className='edit_transport edit_shipping'>
+            <input
+              type='text'
+              value={editShipping}
+              onChange={e => setEditShipping(e.target.value)}
+            />
+            <div>
+              <button onClick={handleEditShipping}>Save</button>
+              <button onClick={() => setEditShipping(null)}>X</button>
+            </div>
+          </div>
+        )
+      ) : (
+        <p>NO</p>
+      )}
 
       <div>
         <p>${item?.fees + item?.amount_to_shipping}</p>
       </div>
 
-      {item?.type_request == 'shipping' ? (editTransport === null ? (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between'
-          }}
-        >
-          {item?.data_company ? (
-            <p style={{ color: '#004478', fontSize: 14 }}>
-              {item?.data_company}
-            </p>
-          ) : (
-            <p style={{ color: 'rgb(209, 208, 208)', fontSize: 14 }}>Empty</p>
-          )}
-          <AiOutlineEdit
-            className='edit_item_request'
-            onClick={() => setEditTransport(item?.data_company)}
-          />
-        </div>
-      ) : (
-        <div className='edit_transport'>
-          <textarea
-            value={editTransport}
-            onChange={e => setEditTransport(e.target.value)}
-          ></textarea>
-          <div>
-            <button onClick={handleEditTransport}>Save</button>
-            <button onClick={() => setEditTransport(null)}>X</button>
+      {item?.type_request == 'shipping' ? (
+        editTransport === null ? (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}
+          >
+            {item?.data_company ? (
+              <p style={{ color: '#004478', fontSize: 14 }}>
+                {item?.data_company}
+              </p>
+            ) : (
+              <p style={{ color: 'rgb(209, 208, 208)', fontSize: 14 }}>Empty</p>
+            )}
+            <AiOutlineEdit
+              className='edit_item_request'
+              onClick={() => setEditTransport(item?.data_company)}
+            />
           </div>
-        </div>
-      )) : <p style={{textAlign:'center'}}>NO</p>}
+        ) : (
+          <div className='edit_transport'>
+            <textarea
+              value={editTransport}
+              onChange={e => setEditTransport(e.target.value)}
+            ></textarea>
+            <div>
+              <button onClick={handleEditTransport}>Save</button>
+              <button onClick={() => setEditTransport(null)}>X</button>
+            </div>
+          </div>
+        )
+      ) : (
+        <p style={{ textAlign: 'center' }}>NO</p>
+      )}
 
-      <div>
-        {item?.type_request == 'pickup' ? <p>{item?.date}</p> : 'NO'}
-      </div>
+      <div>{item?.type_request == 'pickup' ? <p>{item?.date}</p> : 'NO'}</div>
 
       <div>
         <button className='btn_create_order' onClick={handleToggleModal}>
@@ -244,6 +266,15 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
             <div>
               <h5>Total: </h5>
               <p>${item?.fees + item?.amount_to_shipping}</p>
+            </div>
+            <div>
+              <h5>Note: </h5>
+              <textarea
+                placeholder='You can enter a note here that will be displayed on the purchase order...'
+                className='textarea_createOrder'
+                value={note}
+                onChange={e => setNote(e.target.value)}
+              ></textarea>
             </div>
 
             <div className='btns_data_create_order'>
