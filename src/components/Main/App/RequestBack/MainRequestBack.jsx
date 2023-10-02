@@ -126,7 +126,7 @@ export const MainRequestBack = () => {
                 <h4>Fees Payment</h4>
                 <h4>Shipping Payment</h4>
                 <h4>Total Payment</h4>
-                <h4>Transport Data</h4>
+                <h4>Shipping Address</h4>
                 <h4>Date pickup</h4>
                 <h4>Order</h4>
               </div>

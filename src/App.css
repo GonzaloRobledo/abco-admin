@@ -884,14 +884,14 @@ body{
 }
 
 .request_back_titles h4{
-    width:100px;
+    width:150px;
     text-align: center;
     text-transform: uppercase;
     font-size:14px;
 }
 
 .request_back_titles h4:nth-child(2){
-    width:350px;
+    width:400px;
 }
 
 .request_back_titles h4:nth-child(3){
@@ -917,16 +917,28 @@ body{
     display:flex;
     align-items: center;
     padding:10px 0;
-    border-bottom: 1px solid gainsboro;
+    color:white;
+    background-color: rgba(0, 151, 0, 0.399);
+    overflow: auto;
+    min-width: 100%;
+    margin:10px 0;
+}
+
+.bg_paid{
+    background-color: rgba(0, 151, 0, 0.399);
+}
+
+.bg_not_paid{
+    background-color: rgb(255, 80, 80);
 }
 
 .item_request_back > *{
-    width:100px;
+    width:150px;
     text-align: center;
 }
 
 .item_request_back > *:nth-child(2){
-    width:350px;
+    width:400px;
     text-align: left;
 }
 
@@ -936,7 +948,7 @@ body{
 
 .item_request_back > *:nth-child(7){
     width:250px;
-    text-align: left;
+    text-align: center;
 }
 
 .item_request_back > *:nth-child(8){
@@ -974,7 +986,7 @@ body{
 
 .sku_vendor p{
     margin-right: 20px;
-    color:grey;
+    color:white;
 }
 
 .edit_item_request{
@@ -1122,6 +1134,10 @@ body{
     font-weight: bold;
     cursor: pointer;
     border-radius: 8px;
+}
+
+.data_create_order p{
+    color: #004478;
 }
 
 .btns_data_create_order button:first-child{

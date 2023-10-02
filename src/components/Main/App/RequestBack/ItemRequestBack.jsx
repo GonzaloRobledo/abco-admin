@@ -6,7 +6,6 @@ import { createOrder } from '../../../../api/shopify/createOrder'
 
 export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   const [editShipping, setEditShipping] = useState(null)
-  const [editTransport, setEditTransport] = useState(null)
   const [editTracking, setEditTracking] = useState(null)
   const [viewModal, setViewModal] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -19,21 +18,6 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   )
   const createdAt = item?.createdAt?.split('T')[0]
   const token = localStorage.getItem('tokenAdmin')
-
-  const handleEditTransport = async () => {
-    const res = await updateRequestBack(token, {
-      data_company: editTransport,
-      _id: item?._id
-    })
-    if (res?.ok) {
-      const new_request = requestBack?.map(el =>
-        el._id == item?._id ? { ...el, data_company: editTransport } : el
-      )
-      setRequestBack(new_request)
-      setEditTransport(null)
-    }
-    console.log({ res })
-  }
 
   const handleEditShipping = async () => {
     const number = parseFloat(editShipping)
@@ -74,7 +58,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
 
   const handleToggleModal = async () => setViewModal(!viewModal)
 
-  const handleCreateOrder = async () => {
+  const handleCreateOrder = async financial_status => {
     setLoading(true)
     const confirm = window.confirm(
       'Are you sure that you want create this order?'
@@ -86,11 +70,17 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
         fees: item?.fees,
         data_company: item?.data_company,
         email: selling?.user_id,
-        note
+        note,
+        financial_status,
+        address_shipping_user: item?.address_shipping_user
       })
-      if (res?.ok) {
+      if (res?.order) {
+        console.log({order_id: res?.order?.id, data_company:note})
+        console.log(res?.order)
+        const update = await updateRequestBack(token, {order_id: `${res?.order?.id}`, data_company:note})
         window.alert('CREATE SUCCESSFUL!')
-        console.log(res.order?.body)
+        console.log({update});
+        console.log(res?.order)
       }
       console.log({ res })
     } else window.alert('NOT CONFIRM :(')
@@ -98,7 +88,11 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   }
 
   return (
-    <li className='item_request_back'>
+    <li
+      className={`item_request_back ${
+        item?.complete_payment ? 'bg_paid' : 'bg_not_paid'
+      }`}
+    >
       <div>
         <img
           src={prod?.image?.src || prod?.images[0]?.src}
@@ -115,11 +109,18 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
           <p>{prod?.vendor}</p>
           <p>{createdAt}</p>
         </div>
-        <h5 style={{ color: '#004478', fontSize: 16 }}>{selling?.user_id}</h5>
+        <h5
+          style={{
+            color: item?.complete_payment ? '#666666 ' : '#FFFF00',
+            fontSize: 16
+          }}
+        >
+          {selling?.user_id}
+        </h5>
         <h6
           className='type_request'
           style={{
-            color: item?.type_request == 'pickup' ? '#FA6C2C' : '#06a4a9'
+            color: item?.type_request == 'pickup' ? 'black' : 'black'
           }}
         >
           {item?.type_request}
@@ -131,6 +132,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
           <div className='tracking'>
             <p>{item?.tracking_admin}</p>
             <AiOutlineEdit
+              style={{ color: !item?.complete_payment ? '#FFFF00' : '' }}
               className='edit_item_request'
               onClick={() => setEditTracking(item?.tracking_admin)}
             />
@@ -166,6 +168,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
           >
             <p>${item?.amount_to_shipping}</p>
             <AiOutlineEdit
+              style={{ color: !item?.complete_payment ? '#FFFF00' : '' }}
               className='edit_item_request'
               onClick={() => setEditShipping(item?.amount_to_shipping)}
             />
@@ -192,38 +195,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
       </div>
 
       {item?.type_request == 'shipping' ? (
-        editTransport === null ? (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}
-          >
-            {item?.data_company ? (
-              <p style={{ color: '#004478', fontSize: 14 }}>
-                {item?.data_company}
-              </p>
-            ) : (
-              <p style={{ color: 'rgb(209, 208, 208)', fontSize: 14 }}>Empty</p>
-            )}
-            <AiOutlineEdit
-              className='edit_item_request'
-              onClick={() => setEditTransport(item?.data_company)}
-            />
-          </div>
-        ) : (
-          <div className='edit_transport'>
-            <textarea
-              value={editTransport}
-              onChange={e => setEditTransport(e.target.value)}
-            ></textarea>
-            <div>
-              <button onClick={handleEditTransport}>Save</button>
-              <button onClick={() => setEditTransport(null)}>X</button>
-            </div>
-          </div>
-        )
+        <p>{item?.address_shipping_user}</p>
       ) : (
         <p style={{ textAlign: 'center' }}>NO</p>
       )}
@@ -232,58 +204,98 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
 
       <div>
         <button className='btn_create_order' onClick={handleToggleModal}>
-          Create Order
+          {!item?.order_id ? 'Create Order' : 'View Data Order'}
         </button>
         <Modal viewModal={viewModal} handleToggleModal={handleToggleModal}>
-          <div className='data_create_order'>
-            <h4>
-              Are you sure that you want create an order with the next data?
-            </h4>
-            <div>
-              <h5>Product: </h5>
-              <p>{prod?.title}</p>
-            </div>
-            <div>
-              <h5>Variant: </h5>
-              <p>
-                SKU: {variant?.SKU} {'//'} SIZE: {variant?.size}
-              </p>
-            </div>
-            <div
-              style={{ paddingBottom: 12, borderBottom: '1px solid gainsboro' }}
-            >
-              <h5>User: </h5>
-              <p>{selling?.user_id}</p>
-            </div>
-            <div>
-              <h5>Shipping: </h5>
-              <p>${item?.amount_to_shipping}</p>
-            </div>
-            <div>
-              <h5>Fees: </h5>
-              <p>${item?.fees}</p>
-            </div>
-            <div>
-              <h5>Total: </h5>
-              <p>${item?.fees + item?.amount_to_shipping}</p>
-            </div>
-            <div>
-              <h5>Note: </h5>
-              <textarea
-                placeholder='You can enter a note here that will be displayed on the purchase order...'
-                className='textarea_createOrder'
-                value={note}
-                onChange={e => setNote(e.target.value)}
-              ></textarea>
-            </div>
+          {!item?.order_id ? (
+            <div className='data_create_order'>
+              {item?.type_request == 'shipping' ? (
+                <>
+                  <h4>
+                    Are you sure that you want create an order with the next
+                    data?
+                  </h4>
+                  <div>
+                    <h5>Product: </h5>
+                    <p>{prod?.title}</p>
+                  </div>
+                  <div>
+                    <h5>Variant: </h5>
+                    <p>
+                      SKU: {variant?.SKU} {'//'} SIZE: {variant?.size}
+                    </p>
+                  </div>
+                  <div>
+                    <h5>User: </h5>
+                    <p>{selling?.user_id}</p>
+                  </div>
+                  <div
+                    style={{
+                      paddingBottom: 12,
+                      borderBottom: '1px solid gainsboro'
+                    }}
+                  >
+                    <h5>Shipping Address: </h5>
+                    <p>{item?.address_shipping_user}</p>
+                  </div>
+                  <div>
+                    <h5>Shipping: </h5>
+                    <p>${item?.amount_to_shipping}</p>
+                  </div>
+                  <div>
+                    <h5>Fees: </h5>
+                    <p>${item?.fees}</p>
+                  </div>
+                  <div>
+                    <h5>Total: </h5>
+                    <p>${item?.fees + item?.amount_to_shipping}</p>
+                  </div>
+                  <div>
+                    <h5>Note: </h5>
+                    <textarea
+                      placeholder='You can enter a note here that will be displayed on the purchase order...'
+                      className='textarea_createOrder'
+                      value={note}
+                      onChange={e => setNote(e.target.value)}
+                    ></textarea>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h4>Are you sure that you want create an order?</h4>
+                  <p
+                    style={{
+                      color: '#004478',
+                      margin: '15px 0',
+                      lineHeight: 1.4
+                    }}
+                  >
+                    If you create this order, it is assumed that the customer
+                    has settled their return account. This will be saved in
+                    Shopify to maintain a record.
+                  </p>
+                </>
+              )}
 
-            <div className='btns_data_create_order'>
-              <button onClick={handleToggleModal}>Cancel</button>
-              <button onClick={handleCreateOrder}>
-                {!loading ? 'Accept' : 'Loading...'}
-              </button>
+              <div className='btns_data_create_order'>
+                <button onClick={handleToggleModal}>Cancel</button>
+                <button
+                  onClick={() =>
+                    handleCreateOrder(
+                      item?.type_request == 'shipping' ? 'pending' : 'paid'
+                    )
+                  }
+                >
+                  {!loading ? 'Accept' : 'Loading...'}
+                </button>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div>
+              <h5>Order ID: </h5>
+              <p>{item?.order_id}</p>
+            </div>
+          )}
         </Modal>
       </div>
     </li>
