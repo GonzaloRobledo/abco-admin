@@ -1,7 +1,7 @@
-export const getOrder = async (token, id) => {
+export const getDraftOrder = async (token, id) => {
   try {
     const res = await fetch(
-      `https://abco-backend-production-52fd.up.railway.app/api/shopify/order?id=${id}`,
+      `https://abco-backend-production-52fd.up.railway.app/api/shopify/draftOrder?id=${id}`,
       {
         method: 'GET',
         headers: {
