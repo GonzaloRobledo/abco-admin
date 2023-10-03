@@ -64,6 +64,7 @@ body{
     padding:24px;
     position: relative;
     max-width: 800px;
+    width:100%;
     max-height: 80%;
     overflow: auto;
     margin:0 32px;
@@ -881,6 +882,7 @@ body{
     align-items: flex-end;
     padding-bottom:10px;
     border-bottom:3px solid #222;
+    padding-right: 10px;
 }
 
 .request_back_titles h4{
@@ -922,6 +924,7 @@ body{
     overflow: auto;
     min-width: 100%;
     margin:10px 0;
+    padding-right: 10px;
 }
 
 .bg_paid{
@@ -1146,4 +1149,56 @@ body{
 
 .btns_data_create_order button:last-child{
     background-color: green;
+}
+
+.line_items_order{
+    color:#004478;
+    display: block !important;
+}
+
+.line_items_order ul{
+    margin-left:50px;
+}
+
+.line_items_order ul li{
+    margin:10px 0;
+}
+
+.buttons_order_detail{
+    display: flex;
+    padding-top:30px;
+    justify-content: center;
+}
+
+.buttons_order_detail button{
+    padding:12px 40px;
+    border-radius: 4px;
+    outline:none;
+    border:3px solid rgb(197, 0, 0);
+    background-color: rgb(197, 0, 0);
+    color:white;
+    margin:0 10px;
+    font-weight: bold;
+    font-size:17px;
+    cursor: pointer;
+    transition:all 0.2s ease;
+}
+
+.buttons_order_detail button:last-child{
+    background-color: #1573B9;
+    border:3px solid #1573B9;
+}
+
+.buttons_order_detail button:last-child:hover{
+    background-color: white;
+    color:#1573B9;
+}
+
+.buttons_order_detail button:first-child:hover{
+   color: rgb(197, 0, 0);
+   background-color: white;
+}
+
+.data_order{
+    padding-top: 0;
 }

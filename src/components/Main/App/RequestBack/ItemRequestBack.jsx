@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AiOutlineEdit } from 'react-icons/ai'
 import { updateRequestBack } from '../../../../api/requestBack/updateRequestBack'
 import { Modal } from '../../../commons/Modal'
 import { createOrder } from '../../../../api/shopify/createOrder'
+import { getOrder } from '../../../../api/shopify/getOrder'
+import { createInvoice } from '../../../../api/shopify/createInvoice'
 
 export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   const [editShipping, setEditShipping] = useState(null)
@@ -10,6 +12,8 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   const [viewModal, setViewModal] = useState(false)
   const [loading, setLoading] = useState(false)
   const [note, setNote] = useState('')
+  const [order, setOrder] = useState('')
+  const [loadingInvoice, setLoadingInvoice] = useState(false)
 
   const selling = item?.selling
   const prod = item?.selling?.product
@@ -18,6 +22,17 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   )
   const createdAt = item?.createdAt?.split('T')[0]
   const token = localStorage.getItem('tokenAdmin')
+
+  useEffect(() => {
+    if (item?.order_id) getDraftOrder()
+  }, [])
+
+  const getDraftOrder = async () => {
+    const token = localStorage.getItem('tokenAdmin')
+    const order = await getOrder(token, item?.order_id)
+    if (order?.ok) setOrder(order?.data?.draft_order || '')
+    console.log({order})
+  }
 
   const handleEditShipping = async () => {
     const number = parseFloat(editShipping)
@@ -75,18 +90,34 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
         address_shipping_user: item?.address_shipping_user
       })
       if (res?.order) {
-        console.log({order_id: res?.order?.id, data_company:note})
-        console.log(res?.order)
-        const update = await updateRequestBack(token, {order_id: `${res?.order?.id}`, data_company:note})
+        console.log({ order_id: res?.order?.id, data_company: note })
+        console.log({ response_order: res?.order })
+        const update = await updateRequestBack(token, {
+          _id: item?._id,
+          order_id: `${res?.order?.id}`,
+          data_company: note
+        })
         window.alert('CREATE SUCCESSFUL!')
-        console.log({update});
-        console.log(res?.order)
-      }else{
+        console.log({ update })
+      } else {
         window.alert('Ups, error! Try again')
       }
       console.log({ res })
     } else window.alert('NOT CONFIRM :(')
     setLoading(false)
+  }
+
+  const handleCreateInvoice = async () => {
+    setLoadingInvoice(true)
+    const confirm = window.confirm('Are you sure that you want send invoice to email to user: '+order?.email+'?')
+
+    if(confirm){
+        const token = localStorage.getItem('tokenAdmin');
+        const res = await createInvoice(token, order?.id);
+        if(res?.ok) window.alert("Send invoice successful!");
+        else window.alert("Ups, try again send invoice!")
+    }
+    setLoadingInvoice(false)
   }
 
   return (
@@ -206,7 +237,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
 
       <div>
         <button className='btn_create_order' onClick={handleToggleModal}>
-          {!item?.order_id ? 'Create Order' : 'View Data Order'}
+          {!order ? 'Create Order' : 'View order'}
         </button>
         <Modal viewModal={viewModal} handleToggleModal={handleToggleModal}>
           {!item?.order_id ? (
@@ -293,9 +324,74 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
               </div>
             </div>
           ) : (
-            <div>
-              <h5>Order ID: </h5>
-              <p>{item?.order_id}</p>
+            <div className='data_create_order data_order'>
+              <div>
+                <h5>Draft Order ID: </h5>
+                <p>{order?.id}</p>
+              </div>
+              <div>
+                <h5>Code in Shopify: </h5>
+                <p>{order?.name}</p>
+              </div>
+              <div>
+                <h5>Status: </h5>
+                <p>{order.status}</p>
+              </div>
+              <div className='line_items_order'>
+                <h5>Items: </h5>
+                <ul>
+                  {order?.line_items?.map(el => (
+                    <li key={el?.id}>
+                      {el?.title} {'===>'} ${el?.price}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div
+                style={{
+                  paddingTop: 12,
+                  marginTop: 12,
+                  borderTop: '1px solid grey'
+                }}
+              >
+                <h5>User Email: </h5>
+                <p>{order?.email}</p>
+              </div>
+              <div>
+                <h5>Name: </h5>
+                <p>{order?.shipping_address?.first_name}</p>
+              </div>
+              <div>
+                <h5>Last Name: </h5>
+                <p>{order?.shipping_address?.last_name}</p>
+              </div>
+              <div>
+                <h5>Shipping Address: </h5>
+                <p>{order?.shipping_address?.address1}</p>
+              </div>
+              <div>
+                <h5>Country: </h5>
+                <p>
+                  {order?.shipping_address?.country} (
+                  {order?.shipping_address?.country_code})
+                </p>
+              </div>
+              <div>
+                <h5>Phone: </h5>
+                <p>{order?.shipping_address?.phone}</p>
+              </div>
+              <div>
+                <h5>Note: </h5>
+                <p>{order?.note}</p>
+              </div>
+              <div className='buttons_order_detail'>
+                <button>Delete Draft Order</button>
+                <button
+                  onClick={handleCreateInvoice}
+                >
+                  {!loadingInvoice ? (order?.status == 'open' ? 'Send Invoice' : 'Resend Invoice') : 'Loading...'}
+                </button>
+              </div>
             </div>
           )}
         </Modal>
