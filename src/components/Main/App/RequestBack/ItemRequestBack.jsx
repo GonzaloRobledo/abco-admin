@@ -5,6 +5,7 @@ import { Modal } from '../../../commons/Modal'
 import { createDraftOrder } from '../../../../api/shopify/createDraftOrder'
 import { getOrder } from '../../../../api/shopify/getOrder'
 import { createInvoice } from '../../../../api/shopify/createInvoice'
+import { createOrder } from '../../../../api/shopify/createOrder'
 
 export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   const [editShipping, setEditShipping] = useState(null)
@@ -31,7 +32,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
     const token = localStorage.getItem('tokenAdmin')
     const order = await getOrder(token, item?.order_id)
     if (order?.ok) setOrder(order?.data?.draft_order || '')
-    console.log({order})
+    console.log({ order })
   }
 
   const handleEditShipping = async () => {
@@ -107,15 +108,53 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
     setLoading(false)
   }
 
+  const handleCreateOrder = async financial_status => {
+    setLoading(true)
+    const confirm = window.confirm(
+      'Are you sure that you want create this order?'
+    )
+    if (confirm) {
+      const token = localStorage.getItem('tokenAdmin')
+      const res = await createOrder(token, {
+        shipping: item?.amount_to_shipping,
+        fees: item?.fees,
+        data_company: item?.data_company,
+        email: selling?.user_id,
+        note,
+        financial_status,
+        address_shipping_user: item?.address_shipping_user
+      })
+      if (res?.order) {
+        console.log({ order_id: res?.order?.id, data_company: note })
+        console.log({ response_order: res?.order })
+        const update = await updateRequestBack(token, {
+          _id: item?._id,
+          order_id: `${res?.order?.id}`,
+          payment_complete: true
+        })
+        window.alert('CREATE SUCCESSFUL!')
+        console.log({ update })
+      } else {
+        window.alert('Ups, error! Try again')
+      }
+      console.log({ res })
+    } else window.alert('NOT CONFIRM :(')
+    setLoading(false)
+  }
+
   const handleCreateInvoice = async () => {
     setLoadingInvoice(true)
-    const confirm = window.confirm('Are you sure that you want send invoice to email to user: '+order?.email+'?')
+    const confirm = window.confirm(
+      'Are you sure that you want send invoice to email to user: ' +
+        order?.email +
+        '?'
+    )
 
-    if(confirm){
-        const token = localStorage.getItem('tokenAdmin');
-        const res = await createInvoice(token, order?.id);
-        if(res?.ok) window.alert("Send invoice successful!");
-        else window.alert("Ups, try again send invoice!")
+    if (confirm) {
+      const token = localStorage.getItem('tokenAdmin')
+      const res = await createInvoice(token, order?.id)
+      if (res?.ok) window.alert('Send invoice successful!')
+      else window.alert('Ups, try again send invoice!')
     }
     setLoadingInvoice(false)
   }
@@ -123,7 +162,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   return (
     <li
       className={`item_request_back ${
-        item?.complete_payment ? 'bg_paid' : 'bg_not_paid'
+        item?.payment_complete ? 'bg_paid' : 'bg_not_paid'
       }`}
     >
       <div>
@@ -144,7 +183,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
         </div>
         <h5
           style={{
-            color: item?.complete_payment ? '#666666 ' : '#FFFF00',
+            color: item?.payment_complete ? '#666666 ' : '#FFFF00',
             fontSize: 16
           }}
         >
@@ -165,7 +204,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
           <div className='tracking'>
             <p>{item?.tracking_admin}</p>
             <AiOutlineEdit
-              style={{ color: !item?.complete_payment ? '#FFFF00' : '' }}
+              style={{ color: !item?.payment_complete ? '#FFFF00' : '' }}
               className='edit_item_request'
               onClick={() => setEditTracking(item?.tracking_admin)}
             />
@@ -314,9 +353,9 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
                 <button onClick={handleToggleModal}>Cancel</button>
                 <button
                   onClick={() =>
-                    handleCreateDraftOrder(
-                      item?.type_request == 'shipping' ? 'pending' : 'paid'
-                    )
+                    item?.type_request == 'shipping'
+                      ? handleCreateDraftOrder('pending')
+                      : handleCreateOrder('paid')
                   }
                 >
                   {!loading ? 'Accept' : 'Loading...'}
@@ -386,10 +425,12 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
               </div>
               <div className='buttons_order_detail'>
                 <button>Delete Draft Order</button>
-                <button
-                  onClick={handleCreateInvoice}
-                >
-                  {!loadingInvoice ? (order?.status == 'open' ? 'Send Invoice' : 'Resend Invoice') : 'Loading...'}
+                <button onClick={handleCreateInvoice}>
+                  {!loadingInvoice
+                    ? order?.status == 'open'
+                      ? 'Send Invoice'
+                      : 'Resend Invoice'
+                    : 'Loading...'}
                 </button>
               </div>
             </div>
