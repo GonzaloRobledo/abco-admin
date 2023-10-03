@@ -1,15 +1,18 @@
-export const getOrder = async (token, id) => {
+export const createDraftOrder = async (token, info) => {
+  console.log({ token, info })
   try {
     const res = await fetch(
-      `http://localhost:8080/api/shopify/draftOrder?id=${id}`,
+      `http://localhost:8080/api/shopify/createDraftOrder`,
       {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-type': 'application/json; charset=utf-8',
           Authorization: `Bearer ${token}`
-        }
+        },
+        body: JSON.stringify(info)
       }
     )
+    console.log({ res })
     if (!res.ok) throw res
 
     const data = await res.json()

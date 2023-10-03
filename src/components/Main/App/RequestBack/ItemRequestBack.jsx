@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AiOutlineEdit } from 'react-icons/ai'
 import { updateRequestBack } from '../../../../api/requestBack/updateRequestBack'
 import { Modal } from '../../../commons/Modal'
-import { createOrder } from '../../../../api/shopify/createOrder'
+import { createDraftOrder } from '../../../../api/shopify/createDraftOrder'
 import { getOrder } from '../../../../api/shopify/getOrder'
 import { createInvoice } from '../../../../api/shopify/createInvoice'
 
@@ -73,14 +73,14 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
 
   const handleToggleModal = async () => setViewModal(!viewModal)
 
-  const handleCreateOrder = async financial_status => {
+  const handleCreateDraftOrder = async financial_status => {
     setLoading(true)
     const confirm = window.confirm(
       'Are you sure that you want create this order?'
     )
     if (confirm) {
       const token = localStorage.getItem('tokenAdmin')
-      const res = await createOrder(token, {
+      const res = await createDraftOrder(token, {
         shipping: item?.amount_to_shipping,
         fees: item?.fees,
         data_company: item?.data_company,
@@ -314,7 +314,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
                 <button onClick={handleToggleModal}>Cancel</button>
                 <button
                   onClick={() =>
-                    handleCreateOrder(
+                    handleCreateDraftOrder(
                       item?.type_request == 'shipping' ? 'pending' : 'paid'
                     )
                   }
