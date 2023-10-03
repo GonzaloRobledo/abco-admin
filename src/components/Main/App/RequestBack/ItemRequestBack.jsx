@@ -14,10 +14,23 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   const [viewModal, setViewModal] = useState(false)
   const [loading, setLoading] = useState(false)
   const [note, setNote] = useState('')
-  const [order, setOrder] = useState('');
+  const [order, setOrder] = useState('')
   const [loadingInvoice, setLoadingInvoice] = useState(false)
 
   const selling = item?.selling
+
+  console.log({item})
+
+  let reason_fees
+
+  if (selling?.expired > 0) {
+    reason_fees =
+      "10% of the product's list price for returning it within the first 30 initial days."
+  } else {
+    reason_fees =
+      Math.floor(Math.abs(selling?.expired / 24)) + ' days of storage after the initial 30 days.'
+  }
+
   const prod = item?.selling?.product
   const variant = prod?.variants?.find(
     el => el.variant_id == item?.selling?.variant_id
@@ -31,8 +44,12 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
 
   const getOrd = async () => {
     const token = localStorage.getItem('tokenAdmin')
-    const order = item?.type_request == 'shipping' ? await getDraftOrder(token, item?.order_id) : await getOrder(token, item?.order_id)
-    if (order?.ok) setOrder(order?.data?.draft_order || order?.data?.order || '')
+    const order =
+      item?.type_request == 'shipping'
+        ? await getDraftOrder(token, item?.order_id)
+        : await getOrder(token, item?.order_id)
+    if (order?.ok)
+      setOrder(order?.data?.draft_order || order?.data?.order || '')
     console.log({ order })
   }
 
@@ -100,9 +117,13 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
           data_company: note
         })
         setOrder(res?.order)
-        if(update?.ok){
-            const new_request = requestBack?.map(el => el._id == item?._id ? {...el, order_id: res?.order?.id, data_company:note} : el)
-            setRequestBack(new_request)
+        if (update?.ok) {
+          const new_request = requestBack?.map(el =>
+            el._id == item?._id
+              ? { ...el, order_id: res?.order?.id, data_company: note }
+              : el
+          )
+          setRequestBack(new_request)
         }
         window.alert('CREATE SUCCESSFUL!')
         console.log({ update })
@@ -138,9 +159,13 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
           order_id: `${res?.order?.id}`,
           payment_complete: true
         })
-        if(update?.ok){
-            const new_request = requestBack?.map(el => el._id == item?._id ? {...el, order_id: res?.order?.id, payment_complete: true} : el)
-            setRequestBack(new_request)
+        if (update?.ok) {
+          const new_request = requestBack?.map(el =>
+            el._id == item?._id
+              ? { ...el, order_id: res?.order?.id, payment_complete: true }
+              : el
+          )
+          setRequestBack(new_request)
         }
         window.alert('CREATE SUCCESSFUL!')
         console.log({ update })
@@ -164,10 +189,9 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
       const token = localStorage.getItem('tokenAdmin')
       const res = await createInvoice(token, order?.id)
       if (res?.ok) {
-        setOrder({...order, status: 'invoice_sent'})
+        setOrder({ ...order, status: 'invoice_sent' })
         window.alert('Send invoice successful!')
-      }
-      else window.alert('Ups, try again send invoice!')
+      } else window.alert('Ups, try again send invoice!')
     }
     setLoadingInvoice(false)
   }
@@ -332,6 +356,10 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
                     <p>${item?.fees}</p>
                   </div>
                   <div>
+                    <h5>Reason fees: </h5>
+                    <p>{reason_fees}</p>
+                  </div>
+                  <div>
                     <h5>Total: </h5>
                     <p>${item?.fees + item?.amount_to_shipping}</p>
                   </div>
@@ -348,6 +376,15 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
               ) : (
                 <>
                   <h4>Are you sure that you want create an order?</h4>
+                  <div>
+                    <h5>Note: </h5>
+                    <textarea
+                      placeholder='You can enter a note here that will be displayed on the purchase order...'
+                      className='textarea_createOrder'
+                      value={note}
+                      onChange={e => setNote(e.target.value)}
+                    ></textarea>
+                  </div>
                   <p
                     style={{
                       color: '#004478',
@@ -378,17 +415,35 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
           ) : (
             <div className='data_create_order data_order'>
               <div>
-                <h5>{item?.type_request == 'shipping' && 'Draft'} Order ID: </h5>
+                <h5>
+                  {item?.type_request == 'shipping' && 'Draft'} Order ID:{' '}
+                </h5>
                 <p>{order?.id}</p>
               </div>
               <div>
                 <h5>Code in Shopify: </h5>
                 <p>{order?.name}</p>
               </div>
-              {item?.type_request == 'shipping' && <div>
-                <h5>Status: </h5>
-                <p>{order.status}</p>
-              </div>}
+              {item?.type_request == 'shipping' && (
+                <div>
+                  <h5>Status: </h5>
+                  <p>{order.status}</p>
+                </div>
+              )}
+              <div>
+                <h5>Fees Payment: </h5>
+                <p>${item?.fees}</p>
+              </div>
+              <div>
+                <h5>Reason fees: </h5>
+                <p>{reason_fees}</p>
+              </div>
+              {item?.type_request == 'shipping' && (
+                <div>
+                  <h5>Shipping Payment: </h5>
+                  <p>${item?.amount_to_shipping}</p>
+                </div>
+              )}
               <div className='line_items_order'>
                 <h5>Items: </h5>
                 <ul>
@@ -411,33 +466,62 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
               </div>
               <div>
                 <h5>Name: </h5>
-                <p>{order[item?.type_request == 'shipping' ? 'shipping_address' : 'customer']?.first_name}</p>
+                <p>
+                  {
+                    order[
+                      item?.type_request == 'shipping'
+                        ? 'shipping_address'
+                        : 'customer'
+                    ]?.first_name
+                  }
+                </p>
               </div>
               <div>
                 <h5>Last Name: </h5>
-                <p>{order[item?.type_request == 'shipping' ? 'shipping_address' : 'customer']?.last_name}</p>
+                <p>
+                  {
+                    order[
+                      item?.type_request == 'shipping'
+                        ? 'shipping_address'
+                        : 'customer'
+                    ]?.last_name
+                  }
+                </p>
               </div>
               <div>
                 <h5>Shipping Address: </h5>
-                <p>{item?.type_request == 'shipping' ? order?.shipping_address?.address1 : order?.customer?.default_address?.address1}</p>
+                <p>
+                  {item?.type_request == 'shipping'
+                    ? order?.shipping_address?.address1
+                    : order?.customer?.default_address?.address1}
+                </p>
               </div>
               <div>
                 <h5>Country: </h5>
                 <p>
-                {item?.type_request == 'shipping' ? order?.shipping_address?.country : order?.customer?.default_address?.country}
-                  {item?.type_request == 'shipping' ? order?.shipping_address?.country_code : order?.customer?.default_address?.country_code}
+                  {item?.type_request == 'shipping'
+                    ? order?.shipping_address?.country
+                    : order?.customer?.default_address?.country}
+                  {item?.type_request == 'shipping'
+                    ? order?.shipping_address?.country_code
+                    : order?.customer?.default_address?.country_code}
                 </p>
               </div>
               <div>
                 <h5>Phone: </h5>
-                <p>{item?.type_request == 'shipping' ? order?.shipping_address?.phone : order?.customer?.default_address?.phone}</p>
+                <p>
+                  {item?.type_request == 'shipping'
+                    ? order?.shipping_address?.phone
+                    : order?.customer?.default_address?.phone}
+                </p>
               </div>
               <div>
                 <h5>Note: </h5>
                 <p>{order?.note}</p>
               </div>
               <div className='buttons_order_detail'>
-                {item?.type_request == 'shipping' ? <>
+                {item?.type_request == 'shipping' ? (
+                  <>
                     <button>Delete Draft Order</button>
                     <button onClick={handleCreateInvoice}>
                       {!loadingInvoice
@@ -446,7 +530,10 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
                           : 'Resend Invoice'
                         : 'Loading...'}
                     </button>
-                </> : <button className="delete_order_btn">Delete order</button>}
+                  </>
+                ) : (
+                  <button className='delete_order_btn'>Delete order</button>
+                )}
               </div>
             </div>
           )}
