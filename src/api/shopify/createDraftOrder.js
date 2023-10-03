@@ -2,7 +2,7 @@ export const createDraftOrder = async (token, info) => {
   console.log({ token, info })
   try {
     const res = await fetch(
-      `http://localhost:8080/api/shopify/createDraftOrder`,
+      `https://abco-backend-production-52fd.up.railway.app/api/shopify/createDraftOrder`,
       {
         method: 'POST',
         headers: {

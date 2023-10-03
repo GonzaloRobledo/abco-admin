@@ -1,7 +1,7 @@
 export const getOrder = async (token, id) => {
   try {
     const res = await fetch(
-      `http://localhost:8080/api/shopify/draftOrder?id=${id}`,
+      `https://abco-backend-production-52fd.up.railway.app/api/shopify/draftOrder?id=${id}`,
       {
         method: 'GET',
         headers: {

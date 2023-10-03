@@ -2,7 +2,7 @@ export const createInvoice = async (token, id) => {
   console.log({ token, id })
   try {
     const res = await fetch(
-      `http://localhost:8080/api/shopify/sendInvoice?id=${id}`,
+      `https://abco-backend-production-52fd.up.railway.app/api/shopify/sendInvoice?id=${id}`,
       {
         method: 'POST',
         headers: {
