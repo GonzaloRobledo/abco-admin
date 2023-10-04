@@ -26,7 +26,6 @@ export const MainLocations = () => {
     const locations = await getLocations(token)
     if (locations?.ok) {
       setLocations(locations?.locations)
-      setFilterLocations(locations?.locations)
     }
     console.log({ locations })
     setLoading(false)
@@ -44,6 +43,10 @@ export const MainLocations = () => {
     )
     setFilterLocations(filter)
   }
+
+  useEffect(() => {
+    if(locations?.length > 0) setFilterLocations(locations)
+  },[locations])
 
   return (
     <>
@@ -69,7 +72,7 @@ export const MainLocations = () => {
           {locations?.length > 0 && (
             <ul className='list_locations'>
               {filterLocations?.map(el => (
-                <ItemLocation key={el?._id} item={el} />
+                <ItemLocation key={el?._id} item={el} locations={locations} setLocations={setLocations}/>
               ))}
             </ul>
           )}

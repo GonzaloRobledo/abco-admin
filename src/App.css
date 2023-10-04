@@ -712,6 +712,18 @@ body{
 
 /**====================LOCATIONS==================**/
 
+.select_type_location{
+    border:2px solid #FA6C2C;
+    color: #004478;
+    font-size:16px;
+    padding:8px;
+    margin-left: 10px;
+    width:100%;
+    font-weight:bold;
+    border-radius: 8px;
+    outline: none;
+}
+
 .search_locations_title{
     display: flex;
     align-items: center;
