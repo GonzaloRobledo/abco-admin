@@ -1,8 +1,10 @@
+import { BASE_URL } from '../BaseUrl'
+
 export const updateRequestBack = async (token, info) => {
   console.log({ token, info })
   try {
     const res = await fetch(
-      `https://abco-backend-production-52fd.up.railway.app/api/requestBack/updateRequestBackAdmin`,
+      `${BASE_URL.server}/api/requestBack/updateRequestBackAdmin`,
       {
         method: 'PUT',
         headers: {

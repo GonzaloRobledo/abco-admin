@@ -1,7 +1,9 @@
+import { BASE_URL } from '../BaseUrl'
+
 export const getDraftOrder = async (token, id) => {
   try {
     const res = await fetch(
-      `https://abco-backend-production-52fd.up.railway.app/api/shopify/draftOrder?id=${id}`,
+      `${BASE_URL.server}/api/shopify/draftOrder?id=${id}`,
       {
         method: 'GET',
         headers: {

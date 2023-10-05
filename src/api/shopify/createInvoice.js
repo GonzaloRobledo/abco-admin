@@ -1,8 +1,10 @@
+import { BASE_URL } from '../BaseUrl'
+
 export const createInvoice = async (token, id) => {
   console.log({ token, id })
   try {
     const res = await fetch(
-      `https://abco-backend-production-52fd.up.railway.app/api/shopify/sendInvoice?id=${id}`,
+      `${BASE_URL.server}/api/shopify/sendInvoice?id=${id}`,
       {
         method: 'POST',
         headers: {

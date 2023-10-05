@@ -1,7 +1,9 @@
+import { BASE_URL } from '../BaseUrl'
+
 export const getRequestBack = async (token, complete, type) => {
   try {
     const res = await fetch(
-      `https://abco-backend-production-52fd.up.railway.app/api/requestBack/requestBackAdmin?complete=${complete}&type=${type}`,
+      `${BASE_URL.server}/api/requestBack/requestBackAdmin?complete=${complete}&type=${type}`,
       {
         method: 'GET',
         headers: {

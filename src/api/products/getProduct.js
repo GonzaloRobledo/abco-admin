@@ -1,15 +1,14 @@
+import { BASE_URL } from '../BaseUrl'
+
 export const getProduct = async (id, token) => {
   try {
-    const res = await fetch(
-      `https://abco-backend-production-52fd.up.railway.app/api/product/${id}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-type': 'application/json; charset=utf-8',
-          Authorization: `Bearer ${token}`
-        }
+    const res = await fetch(`${BASE_URL.server}/api/product/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${token}`
       }
-    )
+    })
 
     if (!res.ok) throw res
 

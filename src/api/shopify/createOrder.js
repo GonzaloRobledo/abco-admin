@@ -1,17 +1,16 @@
+import { BASE_URL } from '../BaseUrl'
+
 export const createOrder = async (token, info) => {
   console.log({ token, info })
   try {
-    const res = await fetch(
-      `https://abco-backend-production-52fd.up.railway.app/api/shopify/createOrder`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json; charset=utf-8',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(info)
-      }
-    )
+    const res = await fetch(`${BASE_URL.server}/api/shopify/createOrder`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(info)
+    })
     console.log({ res })
     if (!res.ok) throw res
 

@@ -1,8 +1,8 @@
+import { BASE_URL } from '../BaseUrl'
+
 export const getAllProducts = async () => {
   try {
-    const res = await fetch(
-      `https://abco-backend-production-52fd.up.railway.app/api/products/`
-    )
+    const res = await fetch(`${BASE_URL.server}/api/products/`)
 
     if (!res.ok) throw res
 

@@ -1,15 +1,14 @@
+import { BASE_URL } from '../BaseUrl'
+
 export const getOrder = async (token, id) => {
   try {
-    const res = await fetch(
-      `https://abco-backend-production-52fd.up.railway.app/api/shopify/order?id=${id}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-type': 'application/json; charset=utf-8',
-          Authorization: `Bearer ${token}`
-        }
+    const res = await fetch(`${BASE_URL.server}/api/shopify/order?id=${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${token}`
       }
-    )
+    })
     if (!res.ok) throw res
 
     const data = await res.json()
