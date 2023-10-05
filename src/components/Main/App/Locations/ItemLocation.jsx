@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { updateLocation } from '../../../../api/locations/updateLocation'
+import { BiWifi } from 'react-icons/bi'
+import { updateOnlineLocation } from '../../../../api/locations/updateOnlineLocation'
 
 const optionsType = ['shipping', 'dropoff', 'both']
 
 export const ItemLocation = ({ item, locations, setLocations }) => {
   const [editData, setEditData] = useState(null)
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
   const handleChange = e =>
     setEditData({ ...editData, [e.target.name]: e.target.value })
 
@@ -21,7 +23,7 @@ export const ItemLocation = ({ item, locations, setLocations }) => {
       id: item?.id
     })
 
-    console.log({update})
+    console.log({ update })
     if (update?.ok) {
       const new_locations = locations?.map(el =>
         el.id == item.id
@@ -33,17 +35,38 @@ export const ItemLocation = ({ item, locations, setLocations }) => {
             }
           : el
       )
-      console.log({new_locations})
+      console.log({ new_locations })
       setLocations([...new_locations])
       window.alert('Successful update!')
     } else window.alert('Try again update!')
-    setEditData(null);
+    setEditData(null)
     setLoading(false)
+  }
+
+  const handleOnlineLocation = async () => {
+    const confirm = window.confirm('Are you sure you want to change so that the location '+item?.name+' is considered online?')
+    if(confirm){
+        const token = localStorage.getItem('tokenAdmin')
+        const changeUpdate = await updateOnlineLocation(token, { _id: item?._id })
+        console.log({ changeUpdate })
+        if(changeUpdate?.ok){
+            const new_locations = locations?.map(el => el._id == item?._id ? {...el, is_online:true} : {...el, is_online:false});
+            setLocations(new_locations)
+        }
+    }
   }
 
   console.log({ item })
   return (
     <li>
+      <BiWifi
+        className='wifi_icon'
+        style={{ color: item?.is_online ? '#FA6C2C' : 'gainsboro' }}
+        onClick={() => !item?.is_online ? handleOnlineLocation() : console.log("disabled")}
+      />
+      <div>
+        <h2 className="location_name">{item?.name}</h2>
+      </div>
       <div>
         <h4>City: </h4>
         <p>{item?.city}</p>
@@ -80,7 +103,7 @@ export const ItemLocation = ({ item, locations, setLocations }) => {
             type='text'
             name='type'
             onChange={handleChange}
-            className="select_type_location"
+            className='select_type_location'
           >
             {optionsType?.map(el => (
               <option key={el} selected={editData?.type == el}>
@@ -134,7 +157,9 @@ export const ItemLocation = ({ item, locations, setLocations }) => {
         </button>
       ) : (
         <article>
-          <button onClick={handleUpdate}>{!loading ? "Save" : 'Loading...'}</button>
+          <button onClick={handleUpdate}>
+            {!loading ? 'Save' : 'Loading...'}
+          </button>
           <button
             onClick={() => setEditData(null)}
             className='button_cancel_edit_location'
