@@ -1,16 +1,15 @@
 import { BASE_URL } from '../BaseUrl'
 
-// eslint-disable-next-line no-unused-vars
-export const acceptSelling = async (token, item) => {
+export const updateReceived = async (token, info) => {
+  console.log({ token, info })
   try {
-    // console.log({ item })
-    const res = await fetch(`${BASE_URL.server}/api/sellings/accept`, {
+    const res = await fetch(`${BASE_URL.server}/api/sellings/received`, {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json; charset=utf-8',
         Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify(item)
+      body: JSON.stringify(info)
     })
 
     if (!res.ok) throw res
@@ -21,5 +20,6 @@ export const acceptSelling = async (token, item) => {
     const data = await e.json()
     console.log({ dataError: data })
     console.log(e)
+    return null
   }
 }

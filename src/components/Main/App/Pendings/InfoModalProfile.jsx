@@ -1,31 +1,55 @@
+import { useEffect, useState } from 'react'
+import { getUser } from '../../../../api/user/getUser'
+
 // eslint-disable-next-line react/prop-types
-export const InfoModalProfile = ({ data }) => {
+export const InfoModalProfile = ({ email }) => {
+  const [userData, setUserData] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (email) getUserData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [email])
+
+  const getUserData = async () => {
+    setLoading(true)
+    const token = localStorage.getItem('tokenAdmin')
+    const res = await getUser(email, token)
+    if (res?.ok) setUserData(res?.data)
+    setLoading(false)
+  }
   return (
-    <ul>
-      <li>
-        <b>Email: </b>
-        {data.email}
-      </li>
-      <li>
-        <b>Name: </b>
-        {data.name}
-      </li>
-      <li>
-        <b>Last Name: </b>
-        {data.last_name}
-      </li>
-      <li>
-        <b>Username: </b>
-        {data.username}
-      </li>
-      <li>
-        <b>Phone: </b>
-        {data.phone}
-      </li>
-      <li>
-        <b>Country: </b>
-        {data.country}
-      </li>
-    </ul>
+    <>
+      {!loading ? (
+        <ul>
+          <li>
+            <b>Email: </b>
+            {userData?.email}
+          </li>
+          <li>
+            <b>Name: </b>
+            {userData?.name}
+          </li>
+          <li>
+            <b>Last Name: </b>
+            {userData?.last_name}
+          </li>
+          <li>
+            <b>Username: </b>
+            {userData?.username}
+          </li>
+          <li>
+            <b>Phone: </b>
+            {userData?.phone}
+          </li>
+          <li>
+            <b>Country: </b>
+            {userData?.country}
+          </li>
+        </ul>
+      ) : (
+        <p>Loading...</p>
+      )}{' '}
+    </>
   )
 }
