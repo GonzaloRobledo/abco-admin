@@ -1,5 +1,7 @@
+import { MainFinished } from "../components/Main/App/MainFinished/MainFinished"
+
 const Finished = () => {
-    return <div>Finished</div>
+    return <MainFinished />
   }
   
   export default Finished

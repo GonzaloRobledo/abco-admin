@@ -32,7 +32,7 @@ export const MainAccepted = () => {
   const verifyAdmin = async token => {
     const data = await verifyTokenAdmin(token)
     if (!data?.ok) navigate('/')
-    const acceptedData = await getAccepted()
+    const acceptedData = await getAccepted(token)
 console.log({acceptedData})
     setAccepteds(acceptedData?.accepted.reverse() || [])
     setLoading(false)
@@ -51,7 +51,7 @@ console.log({acceptedData})
         </div>
       ) : (
         <section className='main-pending'>
-          <h2>Public Accepteds</h2>
+          <h2>Accepted Publications</h2>
           <p className='total_registers'>
             Total: <span>{accepteds?.length}</span>
           </p>
@@ -73,8 +73,6 @@ console.log({acceptedData})
                   <ItemAccepted
                     key={el._id}
                     item={el}
-                    setAccepteds={setAccepteds}
-                    accepteds={accepteds}
                     locations={locations}
                     toggleModal={toggleModal}
                     setEmailUser={setEmailUser}

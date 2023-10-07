@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react'
 import { Modal } from '../../../Modal/Modal'
-import { ItemPending } from './ItemPending'
 import { useNavigate } from 'react-router-dom'
 import { verifyTokenAdmin } from '../../../../api/auth/verifyTokenAdmin'
 import { Loader } from '../../../commons/Loader'
-import { getPendings } from '../../../../api/sellings/getPendings'
-import { InfoModalProfile } from './InfoModalProfile'
 import { getLocations } from '../../../../api/locations/getLocations'
+import { InfoModalProfile } from '../Pendings/InfoModalProfile'
+import { getOrders } from '../../../../api/orders/getOrders'
+import { ItemOrder } from './ItemOrder'
 
-export const MainPendings = () => {
+export const MainFinished = () => {
   const [visibleModal, setVisibleModal] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [pendings, setPendings] = useState([])
   const [locations, setLocations] = useState([]);
   const [emailUser, setEmailUser] = useState('')
   const navigate = useNavigate()
+  const [orders, setOrders] = useState([])
 
   const toggleModal = () => setVisibleModal(!visibleModal)
   
@@ -32,8 +32,9 @@ export const MainPendings = () => {
   const verifyAdmin = async token => {
     const data = await verifyTokenAdmin(token)
     if (!data?.ok) navigate('/')
-    const pendingsData = await getPendings(token)
-    setPendings(pendingsData?.pendings.reverse() || [])
+    const orders = await getOrders(token)
+    console.log({orders})
+    setOrders(orders?.orders?.reverse() || []);
     setLoading(false)
   }
 
@@ -50,32 +51,28 @@ export const MainPendings = () => {
         </div>
       ) : (
         <section className='main-pending'>
-          <h2>Pending Publications</h2>
+          <h2>Finished Publications</h2>
           <p className='total_registers'>
-            Total: <span>{pendings?.length}</span>
+            Total: <span>{orders?.length}</span>
           </p>
-  
+
           <div style={{ overflow: 'auto', margin: '30px 0' }}>
             <div style={{ minWidth: 1200 }}>
               <div className='request_back_titles'>
                 <h4>-</h4>
                 <h4>Item</h4>
-                <h4>Tracking #</h4>
+                <h4>Expired</h4>
                 <h4>Payout</h4>
                 <h4>Sell in</h4>
                 <h4>Drop Off / Shipping in</h4>
-                <h4>Received</h4>
-                <h4>Action</h4>
               </div>
 
               {/*ITEMS*/}
               <ul>
-                {pendings?.map(el => (
-                  <ItemPending
+                {orders?.map(el => (
+                  <ItemOrder
                     key={el._id}
                     item={el}
-                    setPendings={setPendings}
-                    pendings={pendings}
                     locations={locations}
                     toggleModal={toggleModal}
                     setEmailUser={setEmailUser}
