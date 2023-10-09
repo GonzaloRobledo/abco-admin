@@ -8,17 +8,21 @@ export const ItemPending = ({
   setPendings,
   locations,
   setEmailUser,
-  toggleModal
+  toggleModal,
+  sellNow
 }) => {
   const [loadingAccept, setLoadingAccept] = useState(false)
   const prod = item?.product
   const variant = prod?.variants?.find(el => el.variant_id == item.variant_id)
   const createdAt = item?.createdAt?.split('T')[0]
   let location = ''
+
   if (item?.is_online) {
     location = 'ONLINE'
   } else {
     location = locations?.find(el => el.id == item?.location_id)?.name
+    console.log({location});
+
   }
 
   const handleUpdateReceived = async () => {
@@ -50,6 +54,10 @@ export const ItemPending = ({
       console.log({ res })
     }
     setLoadingAccept(false)
+  }
+  
+  const handleAcceptSellNow = async () => {
+    window.alert("ACCEPT SELL NOW!")
   }
 
   return (
@@ -99,18 +107,18 @@ export const ItemPending = ({
       <div>{!item?.tracking ? <p>NO</p> : <p>{item?.tracking}</p>}</div>
 
       <div>
-        <p>${item?.user_payout}</p>
+        <p>${!sellNow ? item?.user_payout : variant?.sell_now?.price}</p>
       </div>
 
-      <div>
+      {!sellNow && <div>
         <p>{location}</p>
-      </div>
+      </div>}
 
       <div>
-        <p style={{ textAlign: 'center' }}>{item?.where_sell?.name}</p>
+        {!sellNow ? <p style={{ textAlign: 'center' }}>{item?.where_sell?.name}</p> : <p>{location}</p>}
       </div>
 
-      <div className='pending_received'>
+      {!sellNow && <div className='pending_received'>
         <div
           style={{
             display: 'flex',
@@ -125,10 +133,10 @@ export const ItemPending = ({
             }}
           ></div>
         </div>
-      </div>
+      </div>}
 
       <div>
-        <button className='btn_accept_selling' onClick={handleAccept}>
+        <button className='btn_accept_selling' onClick={() => !sellNow ? handleAccept() : handleAcceptSellNow()}>
           {!loadingAccept ? 'Accept' : 'Loading...'}
         </button>
         <button className='btn_denied_selling'>Denied</button>

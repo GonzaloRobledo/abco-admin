@@ -7,39 +7,50 @@ import { Loader } from '../../../commons/Loader'
 import { getPendings } from '../../../../api/sellings/getPendings'
 import { InfoModalProfile } from './InfoModalProfile'
 import { getLocations } from '../../../../api/locations/getLocations'
+import { getSellNow } from '../../../../api/sellNow/getSellNow'
 
 export const MainPendings = () => {
   const [visibleModal, setVisibleModal] = useState(false)
   const [loading, setLoading] = useState(true)
   const [pendings, setPendings] = useState([])
-  const [locations, setLocations] = useState([]);
+  const [locations, setLocations] = useState([])
   const [emailUser, setEmailUser] = useState('')
   const navigate = useNavigate()
+  const [sellNow, setSellNow] = useState(null)
 
   const toggleModal = () => setVisibleModal(!visibleModal)
-  
+
   useEffect(() => {
     const token = localStorage.getItem('tokenAdmin')
-    if (token) {
-        verifyAdmin(token)
-        getLoc(token)
-    }
+    if (token) verifyAdmin(token)
     else navigate('/')
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const verifyAdmin = async token => {
     const data = await verifyTokenAdmin(token)
     if (!data?.ok) navigate('/')
-    const pendingsData = await getPendings(token)
-    setPendings(pendingsData?.pendings.reverse() || [])
+    setSellNow(false)
+    getLoc(token)
+  }
+
+  const getData = async () => {
+    setLoading(true)
+    const token = localStorage.getItem('tokenAdmin')
+    const data = sellNow ? await getSellNow(token) : await getPendings(token)
+    console.log({ data })
+    setPendings(sellNow ? data?.sellNow?.reverse() : data?.pendings?.reverse())
     setLoading(false)
   }
 
-  const getLoc = async (token) => {
-    const loc = await getLocations(token);
-    if(loc?.ok) setLocations(loc?.locations || []);
+  useEffect(() => {
+    if (sellNow !== null) getData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sellNow])
+
+  const getLoc = async token => {
+    const loc = await getLocations(token)
+    if (loc?.ok) setLocations(loc?.locations || [])
   }
 
   return (
@@ -50,11 +61,14 @@ export const MainPendings = () => {
         </div>
       ) : (
         <section className='main-pending'>
-          <h2>Pending Publications</h2>
+          <div>
+            <h2>Pending Publications {sellNow && '- Sell Now'}</h2>
+            <input type='checkbox' onChange={(e) => setSellNow(e.target.checked)} checked={sellNow || false}/>
+          </div>
           <p className='total_registers'>
             Total: <span>{pendings?.length}</span>
           </p>
-  
+
           <div style={{ overflow: 'auto', margin: '30px 0' }}>
             <div style={{ minWidth: 1200 }}>
               <div className='request_back_titles'>
@@ -62,9 +76,9 @@ export const MainPendings = () => {
                 <h4>Item</h4>
                 <h4>Tracking #</h4>
                 <h4>Payout</h4>
-                <h4>Sell in</h4>
+                {!sellNow && <h4>Sell in</h4>}
                 <h4>Drop Off / Shipping in</h4>
-                <h4>Received</h4>
+                {!sellNow && <h4>Received</h4>}
                 <h4>Action</h4>
               </div>
 
@@ -72,6 +86,7 @@ export const MainPendings = () => {
               <ul>
                 {pendings?.map(el => (
                   <ItemPending
+                    sellNow={sellNow}
                     key={el._id}
                     item={el}
                     setPendings={setPendings}
@@ -89,11 +104,11 @@ export const MainPendings = () => {
             title='USER DATA'
             visibleModal={visibleModal}
             toggleModal={() => {
-                toggleModal()
-                setEmailUser('')
+              toggleModal()
+              setEmailUser('')
             }}
           >
-              <InfoModalProfile email={emailUser} />
+            <InfoModalProfile email={emailUser} />
           </Modal>
         </section>
       )}
