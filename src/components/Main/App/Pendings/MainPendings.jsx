@@ -63,7 +63,15 @@ export const MainPendings = () => {
         <section className='main-pending'>
           <div>
             <h2>Pending Publications {sellNow && '- Sell Now'}</h2>
-            <input type='checkbox' onChange={(e) => setSellNow(e.target.checked)} checked={sellNow || false}/>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <label htmlFor='sell_now' style={{ cursor:'pointer'}}>Sell Now</label>
+              <input
+                type='checkbox'
+                id='sell_now'
+                onChange={e => setSellNow(e.target.checked)}
+                checked={sellNow || false}
+              />
+            </div>
           </div>
           <p className='total_registers'>
             Total: <span>{pendings?.length}</span>
@@ -75,10 +83,10 @@ export const MainPendings = () => {
                 <h4>-</h4>
                 <h4>Item</h4>
                 <h4>Tracking #</h4>
-                <h4>Payout</h4>
-                {!sellNow && <h4>Sell in</h4>}
+                <h4>{!sellNow ? 'Payout' : 'Individual Payout'}</h4>
+                <h4>{!sellNow ? 'Sell in' : 'Qty'}</h4>
                 <h4>Drop Off / Shipping in</h4>
-                {!sellNow && <h4>Received</h4>}
+                <h4>{!sellNow ? 'Received' : 'Total Payout'}</h4>
                 <h4>Action</h4>
               </div>
 

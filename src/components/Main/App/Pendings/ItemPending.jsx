@@ -110,15 +110,15 @@ export const ItemPending = ({
         <p>${!sellNow ? item?.user_payout : variant?.sell_now?.price}</p>
       </div>
 
-      {!sellNow && <div>
-        <p>{location}</p>
-      </div>}
+      <div>
+        <p>{!sellNow ? location : item?.quantity}</p>
+      </div>
 
       <div>
         {!sellNow ? <p style={{ textAlign: 'center' }}>{item?.where_sell?.name}</p> : <p>{location}</p>}
       </div>
 
-      {!sellNow && <div className='pending_received'>
+      {!sellNow ? <div className='pending_received'>
         <div
           style={{
             display: 'flex',
@@ -133,7 +133,9 @@ export const ItemPending = ({
             }}
           ></div>
         </div>
-      </div>}
+      </div> : <div className="sell_now_prices">
+            <p>$ {variant?.sell_now?.price * item?.quantity}</p>
+        </div>}
 
       <div>
         <button className='btn_accept_selling' onClick={() => !sellNow ? handleAccept() : handleAcceptSellNow()}>
