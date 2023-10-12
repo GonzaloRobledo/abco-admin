@@ -56,7 +56,7 @@ export const MainSettings = () => {
               <div>
                 <h4>Accommodation Fee:</h4>
                 {!feesEdit ? (
-                  <p>$ {settings.accommodation_fee}</p>
+                  <p>$ {settings.accommodation_fee} USD</p>
                 ) : (
                   <input
                     value={feesEdit?.accommodation_fee}
@@ -72,7 +72,7 @@ export const MainSettings = () => {
               <div>
                 <h4>Falsehood Fee:</h4>
                 {!feesEdit ? (
-                  <p>$ {settings.falsehood_fee}</p>
+                  <p>$ {settings.falsehood_fee} USD</p>
                 ) : (
                   <input
                     value={feesEdit?.falsehood_fee}
