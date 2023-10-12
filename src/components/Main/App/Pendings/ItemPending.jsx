@@ -1,6 +1,8 @@
 import { updateReceived } from '../../../../api/sellings/updateReceived'
 import { acceptSelling } from '../../../../api/sellings/acceptSelling'
 import { useState } from 'react'
+import { getSettings } from '../../../../api/settings/getSettings'
+import { deniedSelling } from '../../../../api/sellings/deniedSelling'
 
 export const ItemPending = ({
   item,
@@ -12,6 +14,7 @@ export const ItemPending = ({
   sellNow
 }) => {
   const [loadingAccept, setLoadingAccept] = useState(false)
+  const [loadingDenied, setLoadingDenied] = useState(false)
   const prod = item?.product
   const variant = prod?.variants?.find(el => el.variant_id == item.variant_id)
   const createdAt = item?.createdAt?.split('T')[0]
@@ -21,8 +24,7 @@ export const ItemPending = ({
     location = 'ONLINE'
   } else {
     location = locations?.find(el => el.id == item?.location_id)?.name
-    console.log({location});
-
+    console.log({ location })
   }
 
   const handleUpdateReceived = async () => {
@@ -55,9 +57,39 @@ export const ItemPending = ({
     }
     setLoadingAccept(false)
   }
-  
+
   const handleAcceptSellNow = async () => {
-    window.alert("ACCEPT SELL NOW!")
+    window.alert('ACCEPT SELL NOW!')
+  }
+
+  const handleDenied = async () => {
+    const confirm = window.confirm(
+      'Are you sure that you want denied this selling?'
+    )
+    if (confirm) {
+      setLoadingDenied(true)
+      const token = localStorage.getItem('tokenAdmin')
+      const settings = await getSettings(token)
+      if (settings?.ok) {
+        const fees = settings?.settings[0]?.falsehood_fee
+
+        const request_back = {
+          selling: item,
+          fees,
+          type_request: 'pickup',
+          date: '',
+          address_shipping_user: ''
+        }
+
+        const res = await deniedSelling(token, request_back)
+
+        if (res?.ok) {
+          const new_pendings = pendings?.filter(el => el._id != item?._id)
+          setPendings(new_pendings)
+        }
+      }
+    }
+    setLoadingDenied(false)
   }
 
   return (
@@ -115,33 +147,46 @@ export const ItemPending = ({
       </div>
 
       <div>
-        {!sellNow ? <p style={{ textAlign: 'center' }}>{item?.where_sell?.name}</p> : <p>{location}</p>}
+        {!sellNow ? (
+          <p style={{ textAlign: 'center' }}>{item?.where_sell?.name}</p>
+        ) : (
+          <p>{location}</p>
+        )}
       </div>
 
-      {!sellNow ? <div className='pending_received'>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: item?.received ? 'flex-end' : 'flex-start',
-            backgroundColor: !item?.received ? 'grey' : '#ffc9b0'
-          }}
-          onClick={handleUpdateReceived}
-        >
+      {!sellNow ? (
+        <div className='pending_received'>
           <div
             style={{
-              backgroundColor: !item?.received ? 'gainsboro' : '#FA6C2C'
+              display: 'flex',
+              justifyContent: item?.received ? 'flex-end' : 'flex-start',
+              backgroundColor: !item?.received ? 'grey' : '#ffc9b0'
             }}
-          ></div>
+            onClick={handleUpdateReceived}
+          >
+            <div
+              style={{
+                backgroundColor: !item?.received ? 'gainsboro' : '#FA6C2C'
+              }}
+            ></div>
+          </div>
         </div>
-      </div> : <div className="sell_now_prices">
-            <p>$ {variant?.sell_now?.price * item?.quantity}</p>
-        </div>}
+      ) : (
+        <div className='sell_now_prices'>
+          <p>$ {variant?.sell_now?.price * item?.quantity}</p>
+        </div>
+      )}
 
       <div>
-        <button className='btn_accept_selling' onClick={() => !sellNow ? handleAccept() : handleAcceptSellNow()}>
+        <button
+          className='btn_accept_selling'
+          onClick={() => (!sellNow ? handleAccept() : handleAcceptSellNow())}
+        >
           {!loadingAccept ? 'Accept' : 'Loading...'}
         </button>
-        <button className='btn_denied_selling'>Denied</button>
+        <button className='btn_denied_selling' onClick={handleDenied}>
+          {!loadingDenied ? 'Denied' : 'Loading...'}
+        </button>
       </div>
     </li>
   )
