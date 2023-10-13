@@ -86,7 +86,7 @@ export const MainPendings = () => {
                 <h4>{!sellNow ? 'Payout' : 'Individual Payout'}</h4>
                 <h4>{!sellNow ? 'Sell in' : 'Qty'}</h4>
                 <h4>Drop Off / Shipping in</h4>
-                <h4>{!sellNow ? 'Received' : 'Total Payout'}</h4>
+                <h4>Received</h4>
                 <h4>Action</h4>
               </div>
 

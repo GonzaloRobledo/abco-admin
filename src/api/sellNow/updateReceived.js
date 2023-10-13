@@ -1,9 +1,9 @@
 import { BASE_URL } from '../BaseUrl'
 
-export const updateReceivedSelling = async (token, info) => {
+export const updateReceivedSellNow = async (token, info) => {
   console.log({ token, info })
   try {
-    const res = await fetch(`${BASE_URL.server}/api/sellings/received`, {
+    const res = await fetch(`${BASE_URL.server}/api/sellNow/updateReceived`, {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json; charset=utf-8',

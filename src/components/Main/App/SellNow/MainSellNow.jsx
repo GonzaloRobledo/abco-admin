@@ -46,10 +46,13 @@ export const MainSellNow = () => {
       })
       setSellNow(sellNows)
     //   console.log({ sellNows })
+    console.log({products});
+    console.log({prod: products?.find(el => el.product_id == '9230595096879')})
     }
   }, [products])
 
   const handleSearch = (sku = valueInput) => {
+    console.log({sku})
     if (sku) {
       let findProduct = false,
         index = 0

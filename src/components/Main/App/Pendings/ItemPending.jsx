@@ -1,8 +1,9 @@
-import { updateReceived } from '../../../../api/sellings/updateReceived'
+import { updateReceivedSelling } from '../../../../api/sellings/updateReceived'
 import { acceptSelling } from '../../../../api/sellings/acceptSelling'
 import { useState } from 'react'
 import { getSettings } from '../../../../api/settings/getSettings'
 import { deniedSelling } from '../../../../api/sellings/deniedSelling'
+import { updateReceivedSellNow } from '../../../../api/sellNow/updateReceived'
 
 export const ItemPending = ({
   item,
@@ -18,7 +19,10 @@ export const ItemPending = ({
   const prod = item?.product
   const variant = prod?.variants?.find(el => el.variant_id == item.variant_id)
   const createdAt = item?.createdAt?.split('T')[0]
-  let location = ''
+  console.log({item});
+  let location = locations?.find(el => el.id == item?.location_id);
+
+//   console.log({item});
 
   if (item?.is_online) {
     location = 'ONLINE'
@@ -29,10 +33,10 @@ export const ItemPending = ({
 
   const handleUpdateReceived = async () => {
     const token = localStorage.getItem('tokenAdmin')
-    const res = await updateReceived(token, {
+    const res = !sellNow ? await updateReceivedSelling(token, {
       id_selling: item?._id,
       value: !item?.received
-    })
+    }) : await updateReceivedSellNow(token, {id_sellNow: item?._id, value: !item?.received})
     if (res?.ok) {
       const new_pendings = pendings?.map(el =>
         el._id == item?._id ? res?.update : el
@@ -155,7 +159,6 @@ export const ItemPending = ({
         )}
       </div>
 
-      {!sellNow ? (
         <div className='pending_received'>
           <div
             style={{
@@ -172,12 +175,7 @@ export const ItemPending = ({
             ></div>
           </div>
         </div>
-      ) : (
-        <div className='sell_now_prices'>
-          <p>$ {variant?.sell_now?.price * item?.quantity}</p>
-        </div>
-      )}
-
+        
       <div>
         <button
           className='btn_accept_selling'
