@@ -39,7 +39,7 @@ export const ItemPending = ({
     }) : await updateReceivedSellNow(token, {id_sellNow: item?._id, value: !item?.received})
     if (res?.ok) {
       const new_pendings = pendings?.map(el =>
-        el._id == item?._id ? res?.update : el
+        el._id == item?._id ? {...res?.update, product: item?.product} : el
       )
       setPendings(new_pendings)
     }
