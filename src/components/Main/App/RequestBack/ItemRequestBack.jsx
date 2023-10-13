@@ -232,7 +232,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
             color: item?.type_request == 'pickup' ? 'black' : 'black'
           }}
         >
-          {item?.type_request}
+          {item?.type_request} <span className="quantity"> Quantity: {item?.quantity}</span>
         </h6>
       </div>
 

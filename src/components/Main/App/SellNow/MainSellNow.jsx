@@ -17,6 +17,7 @@ export const MainSellNow = () => {
   const [valueInput, setValueInput] = useState('')
   const [price, setPrice] = useState(0)
   const [quantity, setQuantity] = useState(0)
+  const [loadingAccept, setLoadingAccept] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('tokenAdmin')
@@ -81,6 +82,7 @@ export const MainSellNow = () => {
   }
 
   const hadleAccept = async () => {
+    setLoadingAccept(true);
     if (price != 0 && quantity != 0) {
       const token = localStorage.getItem('tokenAdmin')
       const data = {
@@ -107,6 +109,7 @@ export const MainSellNow = () => {
     }else{
         window.alert("Price or Quantity is 0!")
     }
+    setLoadingAccept(false)
   }
 
   const handleEdit = el => {
@@ -188,7 +191,7 @@ export const MainSellNow = () => {
                   </div>
                 </li>
                 <li className='buttons_product'>
-                  <button onClick={hadleAccept}>Accept</button>
+                  <button onClick={hadleAccept}>{!loadingAccept ? 'Accept' : 'Loading...'}</button>
                   <button onClick={() => setProduct('')}>Cancel</button>
                 </li>
               </ul>

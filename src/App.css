@@ -1248,6 +1248,12 @@ body {
     font-size: 18px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+}
+
+.quantity{
+    color: yellow;
+    font-size:15px;
 }
 
 .payout_date{

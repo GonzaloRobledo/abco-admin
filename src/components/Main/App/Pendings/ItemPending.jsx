@@ -22,7 +22,7 @@ export const ItemPending = ({
   console.log({item});
   let location = locations?.find(el => el.id == item?.location_id);
 
-//   console.log({item});
+  console.log({item});
 
   if (item?.is_online) {
     location = 'ONLINE'
