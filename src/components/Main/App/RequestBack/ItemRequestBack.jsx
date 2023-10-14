@@ -7,6 +7,7 @@ import { getDraftOrder } from '../../../../api/shopify/getDraftOrder'
 import { createInvoice } from '../../../../api/shopify/createInvoice'
 import { createOrder } from '../../../../api/shopify/createOrder'
 import { getOrder } from '../../../../api/shopify/getOrder'
+import { deleteOrder } from '../../../../api/shopify/deleteOrder'
 
 export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   const [editShipping, setEditShipping] = useState(null)
@@ -16,20 +17,9 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   const [note, setNote] = useState('')
   const [order, setOrder] = useState('')
   const [loadingInvoice, setLoadingInvoice] = useState(false)
+  const [loadingDelete, setLoadingDelete] = useState(false)
 
   const selling = item?.selling
-
-  console.log({item})
-
-  let reason_fees
-
-  if (selling?.expired > 0) {
-    reason_fees =
-      "10% of the product's list price for returning it within the first 30 initial days."
-  } else {
-    reason_fees =
-      Math.floor(Math.abs(selling?.expired / 24)) + ' days of storage after the initial 30 days.'
-  }
 
   const prod = item?.selling?.product
   const variant = prod?.variants?.find(
@@ -40,6 +30,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
 
   useEffect(() => {
     if (item?.order_id) getOrd()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const getOrd = async () => {
@@ -196,6 +187,32 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
     setLoadingInvoice(false)
   }
 
+  const handleDeleteOrder = async () => {
+    setLoadingDelete(true)
+    const confirm = window.confirm(
+      'Are you sure that you want delete this order?'
+    )
+
+    if (confirm) {
+      const token = localStorage.getItem('tokenAdmin')
+      const data = {
+        id: item?._id,
+        order_id: item?.order_id,
+        draft_order: item?.type_request == 'shipping'
+      }
+      console.log({ data })
+      const res = await deleteOrder(token, data)
+      if (res?.ok) {
+        const new_request = requestBack?.map(el =>
+          el._id == res?.update?._id ? res?.update : el
+        )
+        setRequestBack(new_request)
+      }
+    }
+
+    setLoadingDelete(false)
+  }
+
   return (
     <li
       className={`item_request_back ${
@@ -232,7 +249,8 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
             color: item?.type_request == 'pickup' ? 'black' : 'black'
           }}
         >
-          {item?.type_request} <span className="quantity"> Quantity: {item?.quantity}</span>
+          {item?.type_request}{' '}
+          <span className='quantity'> Quantity: {item?.quantity}</span>
         </h6>
       </div>
 
@@ -356,8 +374,8 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
                     <p>${item?.fees}</p>
                   </div>
                   <div>
-                    <h5>Reason fees: </h5>
-                    <p>{reason_fees}</p>
+                    <h5>Motive: </h5>
+                    <p>{item?.motive}</p>
                   </div>
                   <div>
                     <h5>Total: </h5>
@@ -435,8 +453,8 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
                 <p>${item?.fees}</p>
               </div>
               <div>
-                <h5>Reason fees: </h5>
-                <p>{reason_fees}</p>
+                <h5>Motive: </h5>
+                <p>{item?.motive}</p>
               </div>
               {item?.type_request == 'shipping' && (
                 <div>
@@ -522,7 +540,9 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
               <div className='buttons_order_detail'>
                 {item?.type_request == 'shipping' ? (
                   <>
-                    <button>Delete Draft Order</button>
+                    <button onClick={handleDeleteOrder}>
+                      {loadingDelete ? 'Loading...' : 'Delete Draft Order'}
+                    </button>
                     <button onClick={handleCreateInvoice}>
                       {!loadingInvoice
                         ? order?.status == 'open'
@@ -532,7 +552,12 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
                     </button>
                   </>
                 ) : (
-                  <button className='delete_order_btn'>Delete order</button>
+                  <button
+                    className='delete_order_btn'
+                    onClick={handleDeleteOrder}
+                  >
+                    {loadingDelete ? 'Loading...' : 'Delete order'}
+                  </button>
                 )}
               </div>
             </div>
