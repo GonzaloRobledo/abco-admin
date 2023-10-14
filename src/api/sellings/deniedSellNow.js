@@ -5,7 +5,7 @@ export const deniedSellNow = async (token, item) => {
   console.log({ token, item })
   try {
     // console.log({ item })
-    const res = await fetch(`${BASE_URL.local}/api/sellNow/preDeniedSellNow`, {
+    const res = await fetch(`${BASE_URL.server}/api/sellNow/preDeniedSellNow`, {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json; charset=utf-8',
