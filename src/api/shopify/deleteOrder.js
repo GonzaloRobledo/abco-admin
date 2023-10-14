@@ -2,7 +2,7 @@ import { BASE_URL } from '../BaseUrl'
 
 export const deleteOrder = async (token, info) => {
   try {
-    const res = await fetch(`${BASE_URL.local}/api/shopify/deleteOrder`, {
+    const res = await fetch(`${BASE_URL.server}/api/shopify/deleteOrder`, {
       method: 'DELETE',
       headers: {
         'Content-type': 'application/json; charset=utf-8',
