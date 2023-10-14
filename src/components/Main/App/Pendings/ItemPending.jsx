@@ -1,9 +1,9 @@
 import { updateReceivedSelling } from '../../../../api/sellings/updateReceived'
 import { acceptSelling } from '../../../../api/sellings/acceptSelling'
 import { useState } from 'react'
-import { getSettings } from '../../../../api/settings/getSettings'
 import { deniedSelling } from '../../../../api/sellings/deniedSelling'
 import { updateReceivedSellNow } from '../../../../api/sellNow/updateReceived'
+import { deniedSellNow } from '../../../../api/sellings/deniedSellNow'
 
 export const ItemPending = ({
   item,
@@ -19,27 +19,30 @@ export const ItemPending = ({
   const prod = item?.product
   const variant = prod?.variants?.find(el => el.variant_id == item.variant_id)
   const createdAt = item?.createdAt?.split('T')[0]
-  console.log({item});
-  let location = locations?.find(el => el.id == item?.location_id);
+  let location = locations?.find(el => el.id == item?.location_id)
 
-  console.log({item});
+  console.log({ pay: item.user_payout })
 
   if (item?.is_online) {
     location = 'ONLINE'
   } else {
     location = locations?.find(el => el.id == item?.location_id)?.name
-    console.log({ location })
   }
 
   const handleUpdateReceived = async () => {
     const token = localStorage.getItem('tokenAdmin')
-    const res = !sellNow ? await updateReceivedSelling(token, {
-      id_selling: item?._id,
-      value: !item?.received
-    }) : await updateReceivedSellNow(token, {id_sellNow: item?._id, value: !item?.received})
+    const res = !sellNow
+      ? await updateReceivedSelling(token, {
+          id_selling: item?._id,
+          value: !item?.received
+        })
+      : await updateReceivedSellNow(token, {
+          id_sellNow: item?._id,
+          value: !item?.received
+        })
     if (res?.ok) {
       const new_pendings = pendings?.map(el =>
-        el._id == item?._id ? {...res?.update, product: item?.product} : el
+        el._id == item?._id ? { ...res?.update, product: item?.product } : el
       )
       setPendings(new_pendings)
     }
@@ -73,32 +76,29 @@ export const ItemPending = ({
     if (confirm) {
       setLoadingDenied(true)
       const token = localStorage.getItem('tokenAdmin')
-      const settings = await getSettings(token)
-      if (settings?.ok) {
-        const fees = settings?.settings[0]?.falsehood_fee
-
-        const request_back = {
-          selling: item,
-          fees,
-          type_request: 'pickup',
-          date: '',
-          address_shipping_user: ''
-        }
-
-        //change
-        const res = await deniedSelling(token, request_back)
-
-        if (res?.ok) {
-          const new_pendings = pendings?.filter(el => el._id != item?._id)
-          setPendings(new_pendings)
-        }
+      //change
+      const res = !sellNow
+        ? await deniedSelling(token, { selling_id: item?._id })
+        : await deniedSellNow(token, { sellNow_id: item?._id })
+      console.log({ res })
+      if (res?.ok) {
+        const new_pendings = pendings?.map(el =>
+          el._id == item?._id ? { ...el, denied: true } : el
+        )
+        setPendings(new_pendings)
+      }else{
+        window.alert("Ups, try again!")
       }
     }
     setLoadingDenied(false)
   }
 
   return (
-    <li className='item_request_back item_pending'>
+    <li
+      className={`item_request_back item_pending ${
+        item?.denied ? 'item_denied' : ''
+      }`}
+    >
       <div>
         <img
           src={prod?.image?.src || prod?.images[0]?.src}
@@ -144,7 +144,7 @@ export const ItemPending = ({
       <div>{!item?.tracking ? <p>NO</p> : <p>{item?.tracking}</p>}</div>
 
       <div>
-        <p>${!sellNow ? item?.user_payout : variant?.sell_now?.price}</p>
+        <p>${item?.user_payout}</p>
       </div>
 
       <div>
@@ -159,32 +159,38 @@ export const ItemPending = ({
         )}
       </div>
 
-        <div className='pending_received'>
+      <div className='pending_received'>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: item?.received ? 'flex-end' : 'flex-start',
+            backgroundColor: !item?.received ? 'grey' : '#ffc9b0'
+          }}
+          onClick={() => (!item?.denied ? handleUpdateReceived() : null)}
+        >
           <div
             style={{
-              display: 'flex',
-              justifyContent: item?.received ? 'flex-end' : 'flex-start',
-              backgroundColor: !item?.received ? 'grey' : '#ffc9b0'
+              backgroundColor: !item?.received ? 'gainsboro' : '#FA6C2C'
             }}
-            onClick={handleUpdateReceived}
-          >
-            <div
-              style={{
-                backgroundColor: !item?.received ? 'gainsboro' : '#FA6C2C'
-              }}
-            ></div>
-          </div>
+          ></div>
         </div>
-        
+      </div>
+
       <div>
-        <button
-          className='btn_accept_selling'
-          onClick={() => (!sellNow ? handleAccept() : handleAcceptSellNow())}
-        >
-          {!loadingAccept ? 'Accept' : 'Loading...'}
-        </button>
+        {!item?.denied && (
+          <button
+            className='btn_accept_selling'
+            onClick={() => (!sellNow ? handleAccept() : handleAcceptSellNow())}
+          >
+            {!loadingAccept ? 'Accept' : 'Loading...'}
+          </button>
+        )}
         <button className='btn_denied_selling' onClick={handleDenied}>
-          {!loadingDenied ? 'Denied' : 'Loading...'}
+          {!loadingDenied
+            ? item?.denied
+              ? 'Deny again'
+              : 'Denied'
+            : 'Loading...'}
         </button>
       </div>
     </li>

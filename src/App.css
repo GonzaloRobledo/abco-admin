@@ -340,6 +340,10 @@ body {
     padding:15px 10px 15px 0 !important;
 }
 
+.item_denied{
+    background-color: rgb(255, 255, 0) !important;
+}
+
 .deliver_time{
     font-size:14px;
     color:#004478;
