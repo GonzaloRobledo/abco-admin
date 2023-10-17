@@ -189,7 +189,7 @@ export const ItemPending = ({
           {!loadingDenied
             ? item?.denied
               ? 'Deny again'
-              : 'Denied'
+              : 'Deny'
             : 'Loading...'}
         </button>
       </div>
