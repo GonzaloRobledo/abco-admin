@@ -70,7 +70,7 @@ export const ItemPending = ({
   }
 
   const handleDenied = async () => {
-    const confirm = (
+    const confirm = window.confirm(
       'Are you sure that you want to deny this sale?'
     )
     if (confirm) {
