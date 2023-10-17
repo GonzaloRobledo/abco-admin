@@ -86,7 +86,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   const handleCreateDraftOrder = async financial_status => {
     setLoading(true)
     const confirm = window.confirm(
-      'Are you sure that you want create this order?'
+      'Are you sure that you want to create this order?'
     )
     if (confirm) {
       const token = localStorage.getItem('tokenAdmin')
@@ -129,7 +129,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   const handleCreateOrder = async financial_status => {
     setLoading(true)
     const confirm = window.confirm(
-      'Are you sure that you want create this order?'
+      'Are you sure that you want to create this order?'
     )
     if (confirm) {
       const token = localStorage.getItem('tokenAdmin')
@@ -171,7 +171,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   const handleCreateInvoice = async () => {
     setLoadingInvoice(true)
     const confirm = window.confirm(
-      'Are you sure that you want send invoice to email to user: ' +
+      'Are you sure that you want to send invoice to email to user: ' +
         order?.email +
         '?'
     )
@@ -190,7 +190,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   const handleDeleteOrder = async () => {
     setLoadingDelete(true)
     const confirm = window.confirm(
-      'Are you sure that you want delete this order?'
+      'Are you sure that you want to delete this order?'
     )
 
     if (confirm) {

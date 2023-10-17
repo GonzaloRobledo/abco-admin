@@ -50,7 +50,7 @@ export const ItemPending = ({
 
   const handleAccept = async () => {
     const confirm = window.confirm(
-      'Are you sure that you want accepting this selling?'
+      'Are you sure that you want to accept this sale?'
     )
     if (confirm) {
       setLoadingAccept(true)
@@ -70,8 +70,8 @@ export const ItemPending = ({
   }
 
   const handleDenied = async () => {
-    const confirm = window.confirm(
-      'Are you sure that you want denied this selling?'
+    const confirm = (
+      'Are you sure that you want to deny this sale?'
     )
     if (confirm) {
       setLoadingDenied(true)

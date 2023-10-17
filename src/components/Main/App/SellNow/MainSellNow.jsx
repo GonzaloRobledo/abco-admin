@@ -121,7 +121,7 @@ export const MainSellNow = () => {
 
   const handleDelete = async el => {
     const confirm = window.confirm(
-      'Are you sure that you want delete this product?'
+      'Are you sure that you want to delete this product?'
     )
 
     if (confirm) {
