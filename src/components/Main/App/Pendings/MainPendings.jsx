@@ -61,9 +61,9 @@ export const MainPendings = () => {
         </div>
       ) : (
         <section className='main-pending'>
-          <div>
+          <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
             <h2>Pending Publications {sellNow && '- Sell Now'}</h2>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center' }} className="sell_now_pendings">
               <label htmlFor='sell_now' style={{ cursor:'pointer'}}>Sell Now</label>
               <input
                 type='checkbox'
