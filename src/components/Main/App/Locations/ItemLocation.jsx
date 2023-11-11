@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { updateLocation } from '../../../../api/locations/updateLocation'
 import { BiWifi } from 'react-icons/bi'
 import { updateOnlineLocation } from '../../../../api/locations/updateOnlineLocation'
+import { updateLocationEnabled } from '../../../../api/locations/updateLocationEnabled'
+import { updateIsWarehouse } from '../../../../api/locations/updateIsWarehouse'
 
 const optionsType = ['shipping', 'dropoff', 'both']
 
@@ -10,8 +12,6 @@ export const ItemLocation = ({ item, locations, setLocations }) => {
   const [loading, setLoading] = useState(false)
   const handleChange = e =>
     setEditData({ ...editData, [e.target.name]: e.target.value })
-
-  console.log(editData)
 
   const handleUpdate = async () => {
     setLoading(true)
@@ -44,28 +44,104 @@ export const ItemLocation = ({ item, locations, setLocations }) => {
   }
 
   const handleOnlineLocation = async () => {
-    const confirm = window.confirm('Are you sure you want to change so that the location '+item?.name+' is considered online?')
-    if(confirm){
-        const token = localStorage.getItem('tokenAdmin')
-        const changeUpdate = await updateOnlineLocation(token, { _id: item?._id })
-        console.log({ changeUpdate })
-        if(changeUpdate?.ok){
-            const new_locations = locations?.map(el => el._id == item?._id ? {...el, is_online:true} : {...el, is_online:false});
-            setLocations(new_locations)
-        }
+    const confirm = window.confirm(
+      'Are you sure you want to change so that the location ' +
+        item?.name +
+        ' is considered online?'
+    )
+    if (confirm) {
+      const token = localStorage.getItem('tokenAdmin')
+      const changeUpdate = await updateOnlineLocation(token, { _id: item?._id })
+      console.log({ changeUpdate })
+      if (changeUpdate?.ok) {
+        const new_locations = locations?.map(el =>
+          el._id == item?._id
+            ? { ...el, is_online: true }
+            : { ...el, is_online: false }
+        )
+        setLocations(new_locations)
+      }
     }
   }
 
-  console.log({ item })
+  const updateEnabled = async () => {
+    const confirm = window.confirm(
+      'Are you sure you want to change so that the location ' +
+        item?.name +
+        ' is considered enabled for sale?'
+    )
+    if (confirm) {
+      const token = localStorage.getItem('tokenAdmin')
+      const changeUpdate = await updateLocationEnabled(token, {
+        _id: item?._id, enabled: !item?.enabled_for_sale
+      })
+      if (changeUpdate?.ok) {
+        const new_locations = locations?.map(el =>
+          el._id == item?._id
+            ? { ...el, enabled_for_sale: !item?.enabled_for_sale }
+            : el
+        )
+        setLocations(new_locations)
+      }
+    }
+  }
+
+  const updateWarehouse = async () => {
+    const confirm = window.confirm('Are you sure you want to change so that the location ' + item?.name + ' is considered Warehouse?')
+    if (confirm) {
+      const token = localStorage.getItem('tokenAdmin')
+      const changeUpdate = await updateIsWarehouse(token, {
+        _id: item?._id, is_warehouse: !item?.is_warehouse
+      })
+      if (changeUpdate?.ok) {
+        const new_locations = locations?.map(el =>
+          el._id == item?._id
+            ? { ...el, is_warehouse: !item?.is_warehouse }
+            : el
+        )
+        setLocations(new_locations)
+      }
+    }
+  }
+
+
   return (
     <li>
       <BiWifi
         className='wifi_icon'
         style={{ color: item?.is_online ? '#FA6C2C' : 'gainsboro' }}
-        onClick={() => !item?.is_online ? handleOnlineLocation() : console.log("disabled")}
+        onClick={() =>
+          !item?.is_online ? handleOnlineLocation() : console.log('disabled')
+        }
       />
       <div>
-        <h2 className="location_name">{item?.name}</h2>
+        <h2 className='location_name'>{item?.name}</h2>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <h4>Enabled for Sale</h4>
+        <div
+          style={{
+            width: 20,
+            marginLeft: 20,
+            cursor: 'pointer',
+            height: 20,
+            backgroundColor: item?.enabled_for_sale ? 'green' : 'red'
+          }}
+          onClick={updateEnabled}
+        />
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <h4>Is Warehouse</h4>
+        <div
+          style={{
+            width: 20,
+            marginLeft: 20,
+            cursor: 'pointer',
+            height: 20,
+            backgroundColor: item?.is_warehouse ? 'green' : 'red'
+          }}
+          onClick={updateWarehouse}
+        />
       </div>
       <div>
         <h4>City: </h4>

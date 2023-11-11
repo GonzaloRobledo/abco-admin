@@ -53,13 +53,13 @@ export const MainSellNow = () => {
   }, [products])
 
   const handleSearch = (sku = valueInput) => {
-    console.log({sku})
-    if (sku) {
+    const sku_trim = sku?.trim()
+    if (sku_trim) {
       let findProduct = false,
         index = 0
       while (index < products?.length && !findProduct) {
         findProduct = products[index]?.variants?.find(
-          el => el.SKU.toLowerCase() == sku?.toLowerCase()
+          el => el.SKU.toLowerCase() == sku_trim?.toLowerCase()
         )
         if (findProduct) {
           findProduct = {
