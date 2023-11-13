@@ -76,7 +76,7 @@ export const ItemPending = ({
     if (!confirm) return
 
     const token = localStorage.getItem('tokenAdmin')
-    const res = await acceptSellNow(token, item)
+    const res = await acceptSellNow(token, {...item, is_sell_now:true})
     console.log({ res })
     if (res?.ok) {
       const new_pendings = pendings?.filter(el => el._id != item?._id)
