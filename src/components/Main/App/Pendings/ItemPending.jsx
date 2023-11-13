@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { deniedSelling } from '../../../../api/sellings/deniedSelling'
 import { updateReceivedSellNow } from '../../../../api/sellNow/updateReceived'
 import { deniedSellNow } from '../../../../api/sellings/deniedSellNow'
+import { acceptSellNow } from '../../../../api/sellings/acceptSellNow'
 
 export const ItemPending = ({
   item,
@@ -66,7 +67,20 @@ export const ItemPending = ({
   }
 
   const handleAcceptSellNow = async () => {
-    window.alert('ACCEPT SELL NOW!')
+    const confirm = window.confirm('Are you sure that you want to accept?')
+    setLoadingAccept(true)
+
+    if (!confirm) return
+
+    const token = localStorage.getItem('tokenAdmin')
+    const res = await acceptSellNow(token, item)
+    console.log({ res })
+    if (res?.ok) {
+      const new_pendings = pendings?.filter(el => el._id != item?._id)
+      setPendings(new_pendings)
+    }
+
+    setLoadingAccept(false)
   }
 
   const handleDenied = async () => {
@@ -86,8 +100,8 @@ export const ItemPending = ({
           el._id == item?._id ? { ...el, denied: true } : el
         )
         setPendings(new_pendings)
-      }else{
-        window.alert("Ups, try again!")
+      } else {
+        window.alert('Ups, try again!')
       }
     }
     setLoadingDenied(false)

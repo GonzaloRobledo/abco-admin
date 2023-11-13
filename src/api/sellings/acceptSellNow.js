@@ -1,12 +1,11 @@
 import { BASE_URL } from '../BaseUrl'
 
 // eslint-disable-next-line no-unused-vars
-export const deniedSellNow = async (token, item) => {
-  console.log({ token, item })
+export const acceptSellNow = async (token, item) => {
   try {
     // console.log({ item })
-    const res = await fetch(`${BASE_URL.local}/api/sellNow/preDeniedSellNow`, {
-      method: 'PUT',
+    const res = await fetch(`${BASE_URL.local}/api/sellNow/acceptSellNow`, {
+      method: 'POST',
       headers: {
         'Content-type': 'application/json; charset=utf-8',
         Authorization: `Bearer ${token}`
