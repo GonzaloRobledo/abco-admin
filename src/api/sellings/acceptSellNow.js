@@ -4,7 +4,7 @@ import { BASE_URL } from '../BaseUrl'
 export const acceptSellNow = async (token, item) => {
   try {
     // console.log({ item })
-    const res = await fetch(`${BASE_URL.local}/api/sellNow/acceptSellNow`, {
+    const res = await fetch(`${BASE_URL.server}/api/sellNow/acceptSellNow`, {
       method: 'POST',
       headers: {
         'Content-type': 'application/json; charset=utf-8',

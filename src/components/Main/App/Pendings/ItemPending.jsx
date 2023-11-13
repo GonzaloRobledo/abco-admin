@@ -53,16 +53,19 @@ export const ItemPending = ({
     const confirm = window.confirm(
       'Are you sure that you want to accept this sale?'
     )
+
     if (confirm) {
       setLoadingAccept(true)
       const token = localStorage.getItem('tokenAdmin')
       const res = await acceptSelling(token, item)
+
       if (res?.ok) {
         const new_pendings = pendings?.filter(el => el._id != item?._id)
         setPendings(new_pendings)
       }
       console.log({ res })
     }
+
     setLoadingAccept(false)
   }
 
