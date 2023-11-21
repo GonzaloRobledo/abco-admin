@@ -62,6 +62,10 @@ export const MainPendings = () => {
     getLoc(token)
   }
 
+  useEffect(() =>{
+    if(pendings?.length > 0) setPendingsFilter(pendings)
+  },[pendings])
+
   const getData = async () => {
     setLoading(true)
     const token = localStorage.getItem('tokenAdmin')

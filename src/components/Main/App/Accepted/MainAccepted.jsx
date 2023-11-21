@@ -59,6 +59,11 @@ export const MainAccepted = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  useEffect(() =>{
+    if(accepteds?.length > 0) setAccepteds(accepteds)
+  },[accepteds])
+
+
   const verifyAdmin = async token => {
     const data = await verifyTokenAdmin(token)
     if (!data?.ok) navigate('/')
