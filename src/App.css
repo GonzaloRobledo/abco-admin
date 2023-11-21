@@ -1471,3 +1471,22 @@ font-size:22px;
     background-color: inherit;
     color: #004478;
 }
+
+.filters_styles_publications{
+    display: flex;
+    justify-content: center;
+    gap:30px;
+}
+
+.filters_styles_publications input, .filters_styles_publications select{
+    padding:10px;
+    width:300px;
+    font-size:15px;
+    border:3px solid #004478;
+    color:#004478;
+    outline:none;
+}
+
+.filters_styles_publications input::placeholder{
+    color: #FA6C2C
+}

@@ -22,8 +22,6 @@ export const ItemPending = ({
   const createdAt = item?.createdAt?.split('T')[0]
   let location = locations?.find(el => el.id == item?.location_id)
 
-  console.log({ pay: item.user_payout })
-
   if (item?.is_online) {
     location = 'ONLINE'
   } else {
@@ -59,6 +57,7 @@ export const ItemPending = ({
       const token = localStorage.getItem('tokenAdmin')
       const res = await acceptSelling(token, item)
 
+      console.log({res});
       if (res?.ok) {
         const new_pendings = pendings?.filter(el => el._id != item?._id)
         setPendings(new_pendings)
