@@ -12,6 +12,8 @@ export const MainSellNow = () => {
   const [loading, setLoading] = useState(true)
   const [products, setProducts] = useState([])
   const [sellNow, setSellNow] = useState([])
+  const [sellNowFilter, setSellNowFilter] = useState([]);
+  const [filters, setFilters] = useState({ search: ''})
   const navigate = useNavigate()
   const [product, setProduct] = useState('')
   const [valueInput, setValueInput] = useState('')
@@ -39,18 +41,38 @@ export const MainSellNow = () => {
     if (products?.length > 0) {
       const sellNows = []
       products.forEach(el => {
-        if (el.is_sell_now)
           el.variants?.forEach(variant => {
             if (variant.sell_now?.price > 0 && variant.sell_now?.quantity > 0)
               sellNows.push({ ...variant, title: el.title, product_id: el.product_id })
           })
       })
       setSellNow(sellNows)
-    //   console.log({ sellNows })
-    console.log({products});
-    console.log({prod: products?.find(el => el.product_id == '9230595096879')})
+      setSellNowFilter(sellNows);
     }
   }, [products])
+
+  console.log({sellNow})
+
+  useEffect(() => {
+    if (sellNow?.length > 0) {
+      let filter = sellNow
+      if (filters?.search) {
+        const lower = filters?.search?.toLowerCase()
+        filter = filter.filter(el =>
+          {
+            return el.SKU?.toLowerCase().includes(lower) || el?.title?.toLowerCase().includes(lower) || el?.variant_id?.includes(lower) || el?.size?.toLowerCase().includes(lower)
+        }
+        )
+      }
+
+      setSellNowFilter(filter)
+    }
+  }, [filters])
+
+  useEffect(() => {
+    setSellNowFilter(sellNow || [])
+  },[sellNow])
+
 
   const handleSearch = (sku = valueInput) => {
     const sku_trim = sku?.trim()
@@ -201,6 +223,14 @@ export const MainSellNow = () => {
             <p className="not_found">Not found Product with SKU: {valueInput}</p>
           )}
 
+        <div className="filters_styles_publications" style={{marginTop:20}}>
+            <input
+              type='text'
+              placeholder='Search'
+              onChange={e => setFilters({ ...filters, search: e.target.value })}
+            />
+          </div>
+
           <div>
             {sellNow?.length > 0 ? (
               <ul className='list_sell_now'>
@@ -211,7 +241,7 @@ export const MainSellNow = () => {
                   <h5>Price Sell Now</h5>
                   <h5>Action</h5>
                 </li>
-                {sellNow.map(el => (
+                {sellNowFilter?.map(el => (
                   <li key={el.SKU}>
                     <div className="product_size_sellNow"><h5>{el.title}</h5><p>{el.size}</p></div>
                     <h5>{el.SKU}</h5>

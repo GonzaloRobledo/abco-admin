@@ -36,6 +36,7 @@ export const MainFinished = () => {
     const data = await verifyTokenAdmin(token)
     if (!data?.ok) navigate('/')
     const orders = await getOrders(token)
+console.log({orders})
     setOrders(orders?.orders?.reverse() || [])
     setLoading(false)
   }
