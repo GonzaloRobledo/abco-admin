@@ -10,6 +10,7 @@ import SellNow from './routes/SellNow'
 import Locations from './routes/Locations'
 import RequestBack from './routes/RequestBack'
 import Settings from './routes/Settings'
+import Closed from './routes/Closed'
 
 function App () {
   return (
@@ -19,7 +20,8 @@ function App () {
         <Route path='/' element={<Home />} />
         <Route path='/pending' element={<Pendings />} />
         <Route path='/accepted' element={<Accepted />} />
-        <Route path='/finished' element={<Finished />} />
+        <Route path='/unpaid' element={<Finished />} />
+        <Route path='/closed' element={<Closed />} />
         <Route path='/sell-now' element={<SellNow />} />
         <Route path='/locations' element={<Locations />} />
         <Route path='/request-back' element={<RequestBack />} />

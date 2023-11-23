@@ -5,11 +5,11 @@ import { verifyTokenAdmin } from '../../../../api/auth/verifyTokenAdmin'
 import { Loader } from '../../../commons/Loader'
 import { getLocations } from '../../../../api/locations/getLocations'
 import { InfoModalProfile } from '../Pendings/InfoModalProfile'
-import { getOrders } from '../../../../api/orders/getOrders'
 import { ItemOrder } from './ItemOrder'
 import { getOrdersThisWeek } from '../../../../api/orders/getOrdersThisWeek'
 import exceljs from 'exceljs'
 import { downloadExcel } from '../../../../utils/downloadExcel'
+import { getAllSold } from '../../../../api/orders/getAllSold'
 
 export const MainFinished = () => {
   const [visibleModal, setVisibleModal] = useState(false)
@@ -35,8 +35,7 @@ export const MainFinished = () => {
   const verifyAdmin = async token => {
     const data = await verifyTokenAdmin(token)
     if (!data?.ok) navigate('/')
-    const orders = await getOrders(token)
-console.log({orders})
+    const orders = await getAllSold(token)
     setOrders(orders?.orders?.reverse() || [])
     setLoading(false)
   }
@@ -173,7 +172,7 @@ console.log({orders})
               justifyContent: 'space-between'
             }}
           >
-            <h2>Finished Publications</h2>
+            <h2>Unpaid</h2>
             <button
               style={{ marginTop: 40, width: 200 }}
               className='order_paid_button'

@@ -43,7 +43,7 @@ export const ItemOrder = ({ item, locations, setEmailUser, toggleModal, setOrder
     setLoadingOrderPaid(false)
     console.log({res})
     if(res?.ok) {
-        const new_orders = orders?.map(el => el._id === item?._id ? {...el, paid: true} : el);
+        const new_orders = orders?.filter(el => el._id != item?._id);
         setOrders(new_orders)
     }
   }

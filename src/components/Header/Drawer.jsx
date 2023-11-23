@@ -16,7 +16,10 @@ export const Drawer = ({ viewDrawer, toggleDrawer }) => {
           <Link to='/accepted'>Accepted</Link>
         </li>
         <li onClick={toggleDrawer}>
-          <Link to='/finished'>Finished</Link>
+          <Link to='/unpaid'>Unpaid</Link>
+        </li>
+        <li onClick={toggleDrawer}>
+          <Link to='/closed'>Closed</Link>
         </li>
         <li onClick={toggleDrawer}>
           <Link to='/request-back'>Requests Back</Link>
