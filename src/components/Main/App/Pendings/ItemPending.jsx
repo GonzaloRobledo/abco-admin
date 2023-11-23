@@ -19,7 +19,18 @@ export const ItemPending = ({
   const [loadingDenied, setLoadingDenied] = useState(false)
   const prod = item?.product
   const variant = prod?.variants?.find(el => el.variant_id == item.variant_id)
-  const createdAt = item?.createdAt?.split('T')[0]
+  let createdAt = item?.createdAt?.split('T')[0]
+  const fechaHora = new Date(item?.createdAt)
+
+  // Obtener la hora, minutos y segundos
+  const horas = fechaHora.getUTCHours()
+  const minutos = fechaHora.getUTCMinutes()
+  const segundos = fechaHora.getUTCSeconds()
+
+  createdAt = `${createdAt} // ${horas >= 10 ? horas : `0${horas}`}:${
+    minutos >= 10 ? minutos : `0${minutos}`
+  }:${segundos >= 10 ? segundos : `0${segundos}`}`
+  
   let location = locations?.find(el => el.id == item?.location_id)
 
   if (item?.is_online) {

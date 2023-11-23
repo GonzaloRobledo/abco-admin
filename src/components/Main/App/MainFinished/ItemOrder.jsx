@@ -24,7 +24,20 @@ export const ItemOrder = ({ item, locations, setEmailUser, toggleModal, setOrder
     setLoading(false)
   }
 
-  const createdAt = item?.createdAt?.split('T')[0]
+  console.log({item})
+
+  let createdAt = item?.createdAt?.split('T')[0]
+  const fechaHora = new Date(item?.createdAt)
+
+  // Obtener la hora, minutos y segundos
+  const horas = fechaHora.getUTCHours()
+  const minutos = fechaHora.getUTCMinutes()
+  const segundos = fechaHora.getUTCSeconds()
+
+  createdAt = `${createdAt} // ${horas >= 10 ? horas : `0${horas}`}:${
+    minutos >= 10 ? minutos : `0${minutos}`
+  }:${segundos >= 10 ? segundos : `0${segundos}`}`
+
   let location = ''
   if (item?.is_online) {
     location = 'ONLINE'
@@ -90,6 +103,7 @@ export const ItemOrder = ({ item, locations, setEmailUser, toggleModal, setOrder
             <p className='pending_payment_method'>
               Payment Method: {item?.method_payment}
             </p>
+            {item?.order_id && <p>Order Id: {item?.order_id}</p>}
           </div>
 
           <div>
