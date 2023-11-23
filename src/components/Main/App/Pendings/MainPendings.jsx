@@ -15,7 +15,7 @@ export const MainPendings = () => {
   const [loading, setLoading] = useState(true)
   const [pendings, setPendings] = useState([])
   const [pendingsFilter, setPendingsFilter] = useState([])
-  const [filters, setFilters] = useState({ search: '', email: '' })
+  const [filters, setFilters] = useState({ search: '', email: '', location_id: '' })
   const [locations, setLocations] = useState([])
   const [emailUser, setEmailUser] = useState('')
   const navigate = useNavigate()
@@ -26,7 +26,12 @@ export const MainPendings = () => {
 
   useEffect(() => {
     if (pendings?.length > 0) {
-      let filter = pendings
+      filter_function()
+    }
+  }, [filters])
+
+  const filter_function = () => {
+    let filter = pendings
       if (filters?.search) {
         const lower = filters?.search?.toLowerCase()
         filter = filter.filter(el =>
@@ -44,9 +49,14 @@ export const MainPendings = () => {
         )
       }
 
+      if(filters?.location_id){
+        filter = filter.filter(el => el?.location_id == filters?.location_id)
+      }
+
+      console.log({filters})
+
       setPendingsFilter(filter)
-    }
-  }, [filters])
+  }
 
   useEffect(() => {
     const token = localStorage.getItem('tokenAdmin')
@@ -54,6 +64,8 @@ export const MainPendings = () => {
     else navigate('/')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+//   console.log({locations});
 
   const verifyAdmin = async token => {
     const data = await verifyTokenAdmin(token)
@@ -63,7 +75,10 @@ export const MainPendings = () => {
   }
 
   useEffect(() =>{
-    if(pendings?.length > 0) setPendingsFilter(pendings)
+    if(pendings?.length > 0) {
+        setPendingsFilter(pendings)
+        filter_function()
+    }
   },[pendings])
 
   const getData = async () => {
@@ -90,6 +105,13 @@ export const MainPendings = () => {
     const loc = await getLocations(token)
     if (loc?.ok) setLocations(loc?.locations || [])
   }
+
+const handleChangeLocation = (e) => {
+    const value = e.target.value;
+    const location = locations?.find(el => el.name == value);
+    const location_id = location?.id;
+    setFilters({...filters, location_id})
+}
 
   return (
     <>
@@ -127,8 +149,12 @@ export const MainPendings = () => {
           </p>
 
           <div className="filters_styles_publications">
-            <select onChange={(e) => setFilters({...filters, email: e.target.value == 'Empty' ? '' : e.target.value}) }>
-                <option>Empty</option>
+            <select onChange={handleChangeLocation}>
+                <option>Select Location</option>
+                {locations?.map(el => <option key={el._id}>{el.name}</option>)}
+            </select>
+            <select onChange={(e) => setFilters({...filters, email: e.target.value == 'Select User' ? '' : e.target.value}) }>
+                <option>Select User</option>
               {users?.map(el => <option key={el}>{el}</option>)}
             </select>
             <input

@@ -14,7 +14,7 @@ export const MainAccepted = () => {
   const [loading, setLoading] = useState(true)
   const [accepteds, setAccepteds] = useState([])
   const [acceptedsFilter, setAcceptedsFilter] = useState([])
-  const [filters, setFilters] = useState({ search: '', email: '' })
+  const [filters, setFilters] = useState({ search: '', email: '', location_id:'' })
   const [users, setUsers] = useState([])
   const [locations, setLocations] = useState([]);
   const [emailUser, setEmailUser] = useState('')
@@ -25,7 +25,12 @@ export const MainAccepted = () => {
   useEffect(() => {
     console.log(accepteds)
     if (accepteds?.length > 0) {
-      let filter = accepteds
+        filter_function()
+    }
+  }, [filters])
+
+  const filter_function = () => {
+    let filter = accepteds
       if (filters?.search) {
         const lower = filters?.search?.toLowerCase()
         filter = filter.filter(el =>
@@ -44,9 +49,12 @@ export const MainAccepted = () => {
         )
       }
 
+      if(filters?.location_id){
+        filter = filter.filter(el => el?.location_id == filters?.location_id)
+      }
+
       setAcceptedsFilter(filter)
-    }
-  }, [filters])
+  }
   
   useEffect(() => {
     const token = localStorage.getItem('tokenAdmin')
@@ -60,7 +68,10 @@ export const MainAccepted = () => {
   }, [])
 
   useEffect(() =>{
-    if(accepteds?.length > 0) setAccepteds(accepteds)
+    if(accepteds?.length > 0) {
+        setAccepteds(accepteds)
+        filter_function()
+    }
   },[accepteds])
 
 
@@ -81,6 +92,13 @@ export const MainAccepted = () => {
     if(loc?.ok) setLocations(loc?.locations || []);
   }
 
+  const handleChangeLocation = (e) => {
+    const value = e.target.value;
+    const location = locations?.find(el => el.name == value);
+    const location_id = location?.id;
+    setFilters({...filters, location_id})
+}
+
   return (
     <>
       {loading ? (
@@ -95,6 +113,10 @@ export const MainAccepted = () => {
           </p>
 
           <div className="filters_styles_publications">
+            <select onChange={handleChangeLocation}>
+                <option>Select Location</option>
+                {locations?.map(el => <option key={el._id}>{el.name}</option>)}
+            </select>
             <select onChange={(e) => setFilters({...filters, email: e.target.value == 'Empty' ? '' : e.target.value}) }>
                 <option>Empty</option>
               {users?.map(el => <option key={el}>{el}</option>)}

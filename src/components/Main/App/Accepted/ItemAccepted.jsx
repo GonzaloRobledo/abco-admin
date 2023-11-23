@@ -8,7 +8,18 @@ export const ItemAccepted = ({
 }) => {
   const prod = item?.product
   const variant = prod?.variants?.find(el => el.variant_id == item.variant_id)
-  const createdAt = item?.createdAt?.split('T')[0]
+  let createdAt = item?.createdAt?.split('T')[0]
+  const fechaHora = new Date(item?.createdAt)
+
+  // Obtener la hora, minutos y segundos
+  const horas = fechaHora.getUTCHours()
+  const minutos = fechaHora.getUTCMinutes()
+  const segundos = fechaHora.getUTCSeconds()
+
+  createdAt = `${createdAt} // ${horas >= 10 ? horas : `0${horas}`}:${
+    minutos >= 10 ? minutos : `0${minutos}`
+  }:${segundos >= 10 ? segundos : `0${segundos}`}`
+
   let location = ''
   if (item?.is_online) {
     location = 'ONLINE'
@@ -57,7 +68,10 @@ export const ItemAccepted = ({
         </p>
       </div>
 
-      <div> <p>{formatHours(item?.expired)}</p></div>
+      <div>
+        {' '}
+        <p>{formatHours(item?.expired)}</p>
+      </div>
 
       <div>
         <p>${item?.user_payout}</p>
@@ -70,7 +84,6 @@ export const ItemAccepted = ({
       <div>
         <p style={{ textAlign: 'center' }}>{item?.where_sell?.name}</p>
       </div>
-
     </li>
   )
 }
