@@ -10,6 +10,7 @@ import { getOrdersThisWeek } from '../../../../api/orders/getOrdersThisWeek'
 import exceljs from 'exceljs'
 import { downloadExcel } from '../../../../utils/downloadExcel'
 import { getAllSold } from '../../../../api/orders/getAllSold'
+import { compareDates } from '../../../../utils/compareDates'
 
 export const MainFinished = () => {
   const [visibleModal, setVisibleModal] = useState(false)
@@ -36,7 +37,7 @@ export const MainFinished = () => {
     const data = await verifyTokenAdmin(token)
     if (!data?.ok) navigate('/')
     const orders = await getAllSold(token)
-    setOrders(orders?.orders?.reverse() || [])
+    setOrders(orders?.orders?.sort(compareDates) || [])
     setLoading(false)
   }
 
@@ -45,16 +46,10 @@ export const MainFinished = () => {
     if (loc?.ok) setLocations(loc?.locations || [])
   }
 
+  console.log({orders})
+
   const handleOrdersThisWeek = async () => {
-    const token = localStorage.getItem('tokenAdmin')
     setLoadingDownload(true)
-    const res = await getOrdersThisWeek(token)
-    if (!res?.ok) return window.alert('Error, try again')
-
-    const orders = res?.orders
-
-    console.log({orders})
-
     try {
       // Aquí debes agregar la lógica para generar tu archivo Excel con los datos del objeto
       const workbook = new exceljs.Workbook()
@@ -148,8 +143,6 @@ export const MainFinished = () => {
       const day_td = today.getDate()
 
       downloadExcel(stream, `Orders_${year_td}-${month_td + 1}-${day_td}.xlsx`)
-
-      console.log({ res })
     } catch (error) {
       console.error('Error al generar el archivo Excel:', error)
     } finally {
@@ -178,7 +171,7 @@ export const MainFinished = () => {
               className='order_paid_button'
               onClick={handleOrdersThisWeek}
             >
-              {!loadingDownload ? 'Orders This Week' : 'Loading...'}
+              {!loadingDownload ? 'Download Orders' : 'Loading...'}
             </button>
           </div>
           <p className='total_registers'>
