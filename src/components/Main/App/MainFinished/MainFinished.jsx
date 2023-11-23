@@ -46,8 +46,6 @@ export const MainFinished = () => {
     if (loc?.ok) setLocations(loc?.locations || [])
   }
 
-  console.log({orders})
-
   const handleOrdersThisWeek = async () => {
     setLoadingDownload(true)
     try {
