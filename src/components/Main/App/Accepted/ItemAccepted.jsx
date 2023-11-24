@@ -8,13 +8,15 @@ export const ItemAccepted = ({
 }) => {
   const prod = item?.product
   const variant = prod?.variants?.find(el => el.variant_id == item.variant_id)
-  let createdAt = item?.createdAt?.split('T')[0]
+  let createdAt = item?.accepted_date ? item?.accepted_date?.split('T')[0] : item?.createdAt?.split('T')[0]
   const fechaHora = new Date(item?.createdAt)
 
   // Obtener la hora, minutos y segundos
   const horas = fechaHora.getUTCHours()
   const minutos = fechaHora.getUTCMinutes()
   const segundos = fechaHora.getUTCSeconds()
+
+  console.log({item});
 
   createdAt = `${createdAt} // ${horas >= 10 ? horas : `0${horas}`}:${
     minutos >= 10 ? minutos : `0${minutos}`
