@@ -60,7 +60,8 @@ export const MainFinished = () => {
         'FEES',
         'EXPIRED HS',
         'QUANTITY',
-        'TOTAL PAYOUT'
+        'TOTAL PAYOUT',
+        'DATE'
       ])
 
       let index = 0
@@ -92,7 +93,8 @@ export const MainFinished = () => {
           isNaN(fees) ? '--' : fees,
           expired_hs,
           ord?.quantity || 1,
-          ord?.quantity * ord?.payout
+          ord?.quantity * ord?.payout,
+          ord?.createdAt?.split('T')[0]
         ]
 
         worksheet.addRow(data)
@@ -119,18 +121,18 @@ export const MainFinished = () => {
           }
         })
       })
-      // Puedes cambiar 'FFFF00' al código de color que desees.
 
       // Definir el ancho de las columnas
-      worksheet.getColumn('A').width = 30 // Ajusta el ancho de la columna A
+      worksheet.getColumn('A').width = 30 
       worksheet.getColumn('B').width = 10
-      worksheet.getColumn('C').width = 35 // Ajusta el ancho de la columna A
+      worksheet.getColumn('C').width = 35 
       worksheet.getColumn('D').width = 15
-      worksheet.getColumn('E').width = 15 // Ajusta el ancho de la columna A
+      worksheet.getColumn('E').width = 15 
       worksheet.getColumn('F').width = 20
-      worksheet.getColumn('G').width = 15 // Ajusta el ancho de la columna A
+      worksheet.getColumn('G').width = 15 
       worksheet.getColumn('H').width = 15
       worksheet.getColumn('I').width = 15
+      worksheet.getColumn('J').width = 15
 
       const stream = await workbook.xlsx.writeBuffer()
 

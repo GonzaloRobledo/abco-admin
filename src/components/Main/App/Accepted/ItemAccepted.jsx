@@ -16,8 +16,6 @@ export const ItemAccepted = ({
   const minutos = fechaHora.getUTCMinutes()
   const segundos = fechaHora.getUTCSeconds()
 
-  console.log({item});
-
   createdAt = `${createdAt} // ${horas >= 10 ? horas : `0${horas}`}:${
     minutos >= 10 ? minutos : `0${minutos}`
   }:${segundos >= 10 ? segundos : `0${segundos}`}`
