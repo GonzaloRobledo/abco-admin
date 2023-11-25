@@ -167,6 +167,7 @@ export const ItemPending = ({
         <p className='pending_payment_method'>
           Payment Method: {item?.method_payment}
         </p>
+        {item?._id && <p className="order_id_itemOrder">id: {item?._id}</p>}
       </div>
 
       <div>{!item?.tracking ? <p>NO</p> : <p>{item?.tracking}</p>}</div>

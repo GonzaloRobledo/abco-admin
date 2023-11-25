@@ -103,7 +103,7 @@ export const ItemOrder = ({ item, locations, setEmailUser, toggleModal, setOrder
             <p className='pending_payment_method'>
               Payment Method: {item?.method_payment}
             </p>
-            {item?.order_id && <p>Order Id: {item?.order_id}</p>}
+            {item?.order_id && <p className="order_id_itemOrder">Order Id: {item?.order_id}</p>}
           </div>
 
           <div>

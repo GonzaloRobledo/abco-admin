@@ -1528,3 +1528,10 @@ font-size:22px;
 .filters_styles_publications input::placeholder{
     color: #FA6C2C
 }
+
+.order_id_itemOrder{
+    color:#004478;
+    margin-top:10px;
+    font-size:13px;
+    font-weight: bold;
+}

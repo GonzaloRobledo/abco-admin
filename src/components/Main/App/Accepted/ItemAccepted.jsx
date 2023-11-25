@@ -66,10 +66,10 @@ export const ItemAccepted = ({
         <p className='pending_payment_method'>
           Payment Method: {item?.method_payment}
         </p>
+        {item?._id && <p className="order_id_itemOrder">id: {item?._id}</p>}
       </div>
 
       <div>
-        {' '}
         <p>{formatHours(item?.expired)}</p>
       </div>
 
