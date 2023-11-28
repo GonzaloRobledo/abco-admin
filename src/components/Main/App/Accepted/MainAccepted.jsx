@@ -14,9 +14,13 @@ export const MainAccepted = () => {
   const [loading, setLoading] = useState(true)
   const [accepteds, setAccepteds] = useState([])
   const [acceptedsFilter, setAcceptedsFilter] = useState([])
-  const [filters, setFilters] = useState({ search: '', email: '', location_id:'' })
+  const [filters, setFilters] = useState({
+    search: '',
+    email: '',
+    location_id: ''
+  })
   const [users, setUsers] = useState([])
-  const [locations, setLocations] = useState([]);
+  const [locations, setLocations] = useState([])
   const [emailUser, setEmailUser] = useState('')
   const navigate = useNavigate()
 
@@ -25,55 +29,62 @@ export const MainAccepted = () => {
   useEffect(() => {
     console.log(accepteds)
     if (accepteds?.length > 0) {
-        filter_function()
+      filter_function()
     }
   }, [filters])
 
   const filter_function = () => {
     let filter = accepteds
-      if (filters?.search) {
-        const lower = filters?.search?.toLowerCase()
-        filter = filter.filter(el =>
-          {
-            const product = el.product;
-            const variant = product?.variants?.find(variant => variant.variant_id == el?.variant_id);
-            const date = el?.createdAt ? el?.createdAt?.split('T')[0] : null
-            return product?.title?.toLowerCase().includes(lower) || variant?.variant_id?.toLowerCase().includes(lower) || variant?.SKU?.toLowerCase().includes(lower) || product?.SKU?.toLowerCase().includes(lower) || el?.user_id?.toLowerCase()?.includes(lower) || product?.product_id?.includes(lower)  || date?.includes(lower)
-        }
+    if (filters?.search) {
+      const lower = filters?.search?.toLowerCase()
+      filter = filter.filter(el => {
+        const product = el.product
+        const variant = product?.variants?.find(
+          variant => variant.variant_id == el?.variant_id
         )
-      }
-
-      if (filters?.email) {
-        filter = filter.filter(el =>
-          el?.user_id?.toLowerCase().includes(filters?.email.toLowerCase())
+        const date = el?.createdAt ? el?.createdAt?.split('T')[0] : null
+        return (
+          product?.title?.toLowerCase().includes(lower) ||
+          variant?.variant_id?.toLowerCase().includes(lower) ||
+          variant?.SKU?.toLowerCase().includes(lower) ||
+          product?.SKU?.toLowerCase().includes(lower) ||
+          el?.user_id?.toLowerCase()?.includes(lower) ||
+          product?.product_id?.includes(lower) ||
+          date?.includes(lower) ||
+          el._id?.includes(lower)
         )
-      }
+      })
+    }
 
-      if(filters?.location_id){
-        filter = filter.filter(el => el?.location_id == filters?.location_id)
-      }
+    if (filters?.email) {
+      filter = filter.filter(el =>
+        el?.user_id?.toLowerCase().includes(filters?.email.toLowerCase())
+      )
+    }
 
-      setAcceptedsFilter(filter)
+    if (filters?.location_id) {
+      filter = filter.filter(el => el?.location_id == filters?.location_id)
+    }
+
+    setAcceptedsFilter(filter)
   }
-  
+
   useEffect(() => {
     const token = localStorage.getItem('tokenAdmin')
     if (token) {
-        verifyAdmin(token)
-        getLoc(token)
-    }
-    else navigate('/')
+      verifyAdmin(token)
+      getLoc(token)
+    } else navigate('/')
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() =>{
-    if(accepteds?.length > 0) {
-        setAccepteds(accepteds)
-        filter_function()
+  useEffect(() => {
+    if (accepteds?.length > 0) {
+      setAcceptedsFilter(accepteds)
+      filter_function()
     }
-  },[accepteds])
-
+  }, [accepteds])
 
   const verifyAdmin = async token => {
     const data = await verifyTokenAdmin(token)
@@ -87,17 +98,17 @@ export const MainAccepted = () => {
     setLoading(false)
   }
 
-  const getLoc = async (token) => {
-    const loc = await getLocations(token);
-    if(loc?.ok) setLocations(loc?.locations || []);
+  const getLoc = async token => {
+    const loc = await getLocations(token)
+    if (loc?.ok) setLocations(loc?.locations || [])
   }
 
-  const handleChangeLocation = (e) => {
-    const value = e.target.value;
-    const location = locations?.find(el => el.name == value);
-    const location_id = location?.id;
-    setFilters({...filters, location_id})
-}
+  const handleChangeLocation = e => {
+    const value = e.target.value
+    const location = locations?.find(el => el.name == value)
+    const location_id = location?.id
+    setFilters({ ...filters, location_id })
+  }
 
   return (
     <>
@@ -112,14 +123,25 @@ export const MainAccepted = () => {
             Total: <span>{acceptedsFilter?.length}</span>
           </p>
 
-          <div className="filters_styles_publications">
+          <div className='filters_styles_publications'>
             <select onChange={handleChangeLocation}>
-                <option>Select Location</option>
-                {locations?.map(el => <option key={el._id}>{el.name}</option>)}
+              <option>Select Location</option>
+              {locations?.map(el => (
+                <option key={el._id}>{el.name}</option>
+              ))}
             </select>
-            <select onChange={(e) => setFilters({...filters, email: e.target.value == 'Empty' ? '' : e.target.value}) }>
-                <option>Empty</option>
-              {users?.map(el => <option key={el}>{el}</option>)}
+            <select
+              onChange={e =>
+                setFilters({
+                  ...filters,
+                  email: e.target.value == 'Empty' ? '' : e.target.value
+                })
+              }
+            >
+              <option>Empty</option>
+              {users?.map(el => (
+                <option key={el}>{el}</option>
+              ))}
             </select>
             <input
               type='text'
@@ -158,15 +180,14 @@ export const MainAccepted = () => {
             title='USER DATA'
             visibleModal={visibleModal}
             toggleModal={() => {
-                toggleModal()
-                setEmailUser('')
+              toggleModal()
+              setEmailUser('')
             }}
           >
-              <InfoModalProfile email={emailUser} />
+            <InfoModalProfile email={emailUser} />
           </Modal>
         </section>
       )}
     </>
   )
 }
-

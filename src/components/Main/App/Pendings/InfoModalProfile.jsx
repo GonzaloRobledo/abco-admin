@@ -46,6 +46,10 @@ export const InfoModalProfile = ({ email }) => {
             <b>Country: </b>
             {userData?.country}
           </li>
+          <li>
+            <b>Payout Method: </b>
+            {userData?.payout_method} {userData?.payout_method == 'eTransfer' && `( ${userData?.eTransfer_email || userData?.email} )`}
+          </li>
         </ul>
       ) : (
         <p>Loading...</p>

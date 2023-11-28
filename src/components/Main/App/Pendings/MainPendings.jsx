@@ -15,7 +15,11 @@ export const MainPendings = () => {
   const [loading, setLoading] = useState(true)
   const [pendings, setPendings] = useState([])
   const [pendingsFilter, setPendingsFilter] = useState([])
-  const [filters, setFilters] = useState({ search: '', email: '', location_id: '' })
+  const [filters, setFilters] = useState({
+    search: '',
+    email: '',
+    location_id: ''
+  })
   const [locations, setLocations] = useState([])
   const [emailUser, setEmailUser] = useState('')
   const navigate = useNavigate()
@@ -32,30 +36,38 @@ export const MainPendings = () => {
 
   const filter_function = () => {
     let filter = pendings
-      if (filters?.search) {
-        const lower = filters?.search?.toLowerCase()
-        filter = filter.filter(el =>
-          {
-            const product = el.product;
-            const variant = product?.variants?.find(variant => variant.variant_id == el?.variant_id);
-            return product?.title?.toLowerCase().includes(lower) || variant?.variant_id?.toLowerCase().includes(lower) || variant?.SKU?.toLowerCase().includes(lower) || product?.SKU?.toLowerCase().includes(lower) || el?.user_id?.toLowerCase()?.includes(lower) || product?.product_id?.includes(lower)
-        }
+    if (filters?.search) {
+      const lower = filters?.search?.toLowerCase()
+      filter = filter.filter(el => {
+        const product = el.product
+        const variant = product?.variants?.find(
+          variant => variant.variant_id == el?.variant_id
         )
-      }
-
-      if (filters?.email) {
-        filter = filter.filter(el =>
-          el?.user_id?.toLowerCase().includes(filters?.email.toLowerCase())
+        return (
+          product?.title?.toLowerCase().includes(lower) ||
+          variant?.variant_id?.toLowerCase().includes(lower) ||
+          variant?.SKU?.toLowerCase().includes(lower) ||
+          product?.SKU?.toLowerCase().includes(lower) ||
+          el?.user_id?.toLowerCase()?.includes(lower) ||
+          product?.product_id?.includes(lower) ||
+          el._id?.includes(lower)
         )
-      }
+      })
+    }
 
-      if(filters?.location_id){
-        filter = filter.filter(el => el?.location_id == filters?.location_id)
-      }
+    if (filters?.email) {
+      filter = filter.filter(el =>
+        el?.user_id?.toLowerCase().includes(filters?.email.toLowerCase())
+      )
+    }
 
-      console.log({filters})
+    if (filters?.location_id) {
+      filter = filter.filter(el => el?.location_id == filters?.location_id)
+    }
 
-      setPendingsFilter(filter)
+    console.log({ filters })
+
+    setPendingsFilter(filter)
   }
 
   useEffect(() => {
@@ -65,7 +77,7 @@ export const MainPendings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-//   console.log({locations});
+  //   console.log({locations});
 
   const verifyAdmin = async token => {
     const data = await verifyTokenAdmin(token)
@@ -74,24 +86,32 @@ export const MainPendings = () => {
     getLoc(token)
   }
 
-  useEffect(() =>{
-    if(pendings?.length > 0) {
-        setPendingsFilter(pendings)
-        filter_function()
+  useEffect(() => {
+    if (pendings?.length > 0) {
+      setPendingsFilter(pendings)
+      filter_function()
     }
-  },[pendings])
+  }, [pendings])
 
   const getData = async () => {
     setLoading(true)
     const token = localStorage.getItem('tokenAdmin')
     const data = sellNow ? await getSellNow(token) : await getPendings(token)
     console.log({ data })
-    setPendings(sellNow ? data?.sellNow?.sort(compareDates) : data?.pendings?.sort(compareDates))
+    setPendings(
+      sellNow
+        ? data?.sellNow?.sort(compareDates)
+        : data?.pendings?.sort(compareDates)
+    )
     setPendingsFilter(
-      sellNow ? data?.sellNow?.sort(compareDates) : data?.pendings?.sort(compareDates)
+      sellNow
+        ? data?.sellNow?.sort(compareDates)
+        : data?.pendings?.sort(compareDates)
     )
     const users_set = new Set()
-    sellNow ? data?.sellNow?.forEach(el => users_set.add(el.user_id)) : data?.pendings?.forEach(el => users_set.add(el.user_id))
+    sellNow
+      ? data?.sellNow?.forEach(el => users_set.add(el.user_id))
+      : data?.pendings?.forEach(el => users_set.add(el.user_id))
     setUsers([...users_set])
     setLoading(false)
   }
@@ -106,12 +126,12 @@ export const MainPendings = () => {
     if (loc?.ok) setLocations(loc?.locations || [])
   }
 
-const handleChangeLocation = (e) => {
-    const value = e.target.value;
-    const location = locations?.find(el => el.name == value);
-    const location_id = location?.id;
-    setFilters({...filters, location_id})
-}
+  const handleChangeLocation = e => {
+    const value = e.target.value
+    const location = locations?.find(el => el.name == value)
+    const location_id = location?.id
+    setFilters({ ...filters, location_id })
+  }
 
   return (
     <>
@@ -148,14 +168,25 @@ const handleChangeLocation = (e) => {
             Total: <span>{pendingsFilter?.length}</span>
           </p>
 
-          <div className="filters_styles_publications">
+          <div className='filters_styles_publications'>
             <select onChange={handleChangeLocation}>
-                <option>Select Location</option>
-                {locations?.map(el => <option key={el._id}>{el.name}</option>)}
+              <option>Select Location</option>
+              {locations?.map(el => (
+                <option key={el._id}>{el.name}</option>
+              ))}
             </select>
-            <select onChange={(e) => setFilters({...filters, email: e.target.value == 'Select User' ? '' : e.target.value}) }>
-                <option>Select User</option>
-              {users?.map(el => <option key={el}>{el}</option>)}
+            <select
+              onChange={e =>
+                setFilters({
+                  ...filters,
+                  email: e.target.value == 'Select User' ? '' : e.target.value
+                })
+              }
+            >
+              <option>Select User</option>
+              {users?.map(el => (
+                <option key={el}>{el}</option>
+              ))}
             </select>
             <input
               type='text'
