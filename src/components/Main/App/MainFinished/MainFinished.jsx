@@ -210,6 +210,8 @@ export const MainFinished = () => {
     }
   }
 
+  console.log({orders})
+
   const handleChangeLocation = e => {
     const value = e.target.value
     const location = locations?.find(el => el.name == value)
