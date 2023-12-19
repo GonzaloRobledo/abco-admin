@@ -1535,3 +1535,9 @@ font-size:22px;
     font-size:13px;
     font-weight: bold;
 }
+
+.message_please_receive{
+    font-size: 13px;
+    font-weight: bold;
+    color: #001f36;
+}

@@ -205,7 +205,7 @@ export const ItemPending = ({
         </div>
       </div>
 
-      <div>
+      {item?.received || item?.denied ? <div>
         {!item?.denied && (
           <button
             className='btn_accept_selling'
@@ -221,7 +221,7 @@ export const ItemPending = ({
               : 'Deny'
             : 'Loading...'}
         </button>
-      </div>
+      </div> : <p className="message_please_receive">Please Receive Item Before Authenticating</p>}
     </li>
   )
 }
