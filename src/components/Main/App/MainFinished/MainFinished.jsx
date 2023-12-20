@@ -18,6 +18,7 @@ export const MainFinished = () => {
   const [emailUser, setEmailUser] = useState('')
   const navigate = useNavigate()
   const [orders, setOrders] = useState([])
+  const [totalCAD, setTotalCAD] = useState(0)
   const [ordersFilter, setOrdersFilter] = useState([])
   const [filters, setFilters] = useState({
     search: '',
@@ -149,7 +150,9 @@ export const MainFinished = () => {
           product?.title,
           variant?.SKU,
           ord?.method_payment,
-          ord?.method_payment == 'eTransfer' ? (ord?.eTransfer_email || ord?.user_id) : '-',
+          ord?.method_payment == 'eTransfer'
+            ? ord?.eTransfer_email || ord?.user_id
+            : '-',
           isNaN(fees) ? '--' : fees,
           expired_hs,
           ord?.quantity || 1,
@@ -217,6 +220,16 @@ export const MainFinished = () => {
     setFilters({ ...filters, location_id })
   }
 
+  useEffect(() => {
+    if (ordersFilter?.length > 0) {
+      let total = 0
+      ordersFilter?.forEach(el => {
+        total += el?.payout
+      })
+      setTotalCAD(total)
+    } else setTotalCAD(0)
+  }, [ordersFilter])
+
   return (
     <>
       {loading ? (
@@ -241,9 +254,18 @@ export const MainFinished = () => {
               {!loadingDownload ? 'Download Orders' : 'Loading...'}
             </button>
           </div>
-          <p className='total_registers'>
-            Total: <span>{orders?.length}</span>
-          </p>
+
+          <div className='total_register_container'>
+            <h5 style={{ marginBottom: 10 }}>Totals: </h5>
+            <div>
+              <p>Items: </p>
+              <span>{ordersFilter?.length}</span>
+            </div>
+            <div>
+              <p>CAD: </p>
+              <span>${totalCAD.toFixed(1)}</span>
+            </div>
+          </div>
 
           <div className='filters_styles_publications'>
             <select onChange={handleChangeLocation}>

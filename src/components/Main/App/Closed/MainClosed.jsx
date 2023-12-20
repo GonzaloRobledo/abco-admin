@@ -22,6 +22,7 @@ export const MainClosed = () => {
     email: '',
     location_id: ''
   })
+  const [totalCAD, setTotalCAD] = useState(0)
   const [users, setUsers] = useState([])
 
   const toggleModal = () => setVisibleModal(!visibleModal)
@@ -57,7 +58,8 @@ export const MainClosed = () => {
           variant?.SKU?.toLowerCase().includes(lower) ||
           product?.SKU?.toLowerCase().includes(lower) ||
           el?.user_id?.toLowerCase()?.includes(lower) ||
-          product?.product_id?.includes(lower) || el?.order_id?.includes(lower)
+          product?.product_id?.includes(lower) ||
+          el?.order_id?.includes(lower)
         )
       })
     }
@@ -106,6 +108,16 @@ export const MainClosed = () => {
     setFilters({ ...filters, location_id })
   }
 
+  useEffect(() => {
+    if (ordersFilter?.length > 0) {
+      let total = 0
+      ordersFilter?.forEach(el => {
+        total += el?.payout
+      })
+      setTotalCAD(total)
+    } else setTotalCAD(0)
+  }, [ordersFilter])
+
   return (
     <>
       {loading ? (
@@ -123,9 +135,17 @@ export const MainClosed = () => {
           >
             <h2>Closed</h2>
           </div>
-          <p className='total_registers'>
-            Total: <span>{orders?.length}</span>
-          </p>
+          <div className='total_register_container'>
+            <h5 style={{ marginBottom: 10 }}>Totals: </h5>
+            <div>
+              <p>Items: </p>
+              <span>{ordersFilter?.length}</span>
+            </div>
+            <div>
+              <p>CAD: </p>
+              <span>${totalCAD.toFixed(1)}</span>
+            </div>
+          </div>
 
           <div className='filters_styles_publications'>
             <select onChange={handleChangeLocation}>

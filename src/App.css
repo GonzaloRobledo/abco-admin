@@ -83,6 +83,7 @@ body {
     cursor: pointer;
 }
 
+
 .modal {
     background-color: rgba(0, 0, 0, 0.85);
     position: fixed;
@@ -351,6 +352,38 @@ body {
 
 .total_registers span {
     color: #FA6C2C;
+}
+
+.total_register_container{
+    width:165px;
+}
+
+.total_register_container h5{
+    margin-bottom:10px;
+    margin-top:10px;
+    color:#004478;
+    font-size:20px;
+}
+
+.total_register_container > div{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin:5px 0;
+}
+
+.total_register_container > div:last-child{
+    margin-top:10px;
+}
+
+.total_register_container > div p{
+    color:#004478;
+    font-weight: bold;
+}
+
+.total_register_container > div span{
+    color:#FA6C2C;
+    font-weight: bold;
 }
 
 .main-pendings_titles {

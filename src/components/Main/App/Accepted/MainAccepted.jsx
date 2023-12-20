@@ -19,6 +19,7 @@ export const MainAccepted = () => {
     email: '',
     location_id: ''
   })
+  const [totalCAD, setTotalCAD] = useState(0)
   const [users, setUsers] = useState([])
   const [locations, setLocations] = useState([])
   const [emailUser, setEmailUser] = useState('')
@@ -110,6 +111,16 @@ export const MainAccepted = () => {
     setFilters({ ...filters, location_id })
   }
 
+  useEffect(() => {
+    if (acceptedsFilter?.length > 0) {
+      let total = 0
+      acceptedsFilter?.forEach(el => {
+        total += el?.user_payout
+      })
+      setTotalCAD(total)
+    } else setTotalCAD(0)
+  }, [acceptedsFilter])
+
   return (
     <>
       {loading ? (
@@ -119,9 +130,17 @@ export const MainAccepted = () => {
       ) : (
         <section className='main-pending'>
           <h2>Accepted Publications</h2>
-          <p className='total_registers'>
-            Total: <span>{acceptedsFilter?.length}</span>
-          </p>
+          <div className='total_register_container'>
+            <h5 style={{ marginBottom: 10 }}>Totals: </h5>
+            <div>
+              <p>Items: </p>
+              <span>{acceptedsFilter?.length}</span>
+            </div>
+            <div>
+              <p>CAD: </p>
+              <span>${totalCAD.toFixed(1)}</span>
+            </div>
+          </div>
 
           <div className='filters_styles_publications'>
             <select onChange={handleChangeLocation}>
@@ -134,11 +153,11 @@ export const MainAccepted = () => {
               onChange={e =>
                 setFilters({
                   ...filters,
-                  email: e.target.value == 'Empty' ? '' : e.target.value
+                  email: e.target.value == 'Select User' ? '' : e.target.value
                 })
               }
             >
-              <option>Empty</option>
+              <option>Select User</option>
               {users?.map(el => (
                 <option key={el}>{el}</option>
               ))}
