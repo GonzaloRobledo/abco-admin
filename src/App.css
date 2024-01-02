@@ -1487,7 +1487,7 @@ font-size:22px;
 
 .fees_container{
     padding:20px;
-    max-width: 400px;
+    max-width: 600px;
     margin:60px auto;
     border:3px solid #004478;
     border-radius: 24px;
@@ -1504,6 +1504,11 @@ font-size:22px;
     font-weight: bold;
     color:#FA6C2C;
     font-size:20px;
+}
+
+.fees_container > div p span{
+    font-size:16px;
+    color: #004478;
 }
 
 .fees_container > div input{

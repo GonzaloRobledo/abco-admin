@@ -56,33 +56,39 @@ export const MainSettings = () => {
               <div>
                 <h4>Accommodation Fee:</h4>
                 {!feesEdit ? (
-                  <p>$ {settings.accommodation_fee} USD</p>
+                  <p>$ {settings.accommodation_fee} USD <span>({settings.accommodation_fee_CAD.toFixed(2)} CAD)</span></p>
                 ) : (
-                  <input
-                    value={feesEdit?.accommodation_fee}
-                    onChange={e =>
-                      setFeesEdit({
-                        ...feesEdit,
-                        accommodation_fee: e.target.value
-                      })
-                    }
-                  />
+                  <>
+                      <input
+                        value={feesEdit?.accommodation_fee}
+                        onChange={e =>
+                          setFeesEdit({
+                            ...feesEdit,
+                            accommodation_fee: e.target.value
+                          })
+                        }
+                      />
+                      <span style={{marginLeft:10}}>USD</span>
+                  </>
                 )}
               </div>
               <div>
                 <h4>Falsehood Fee:</h4>
                 {!feesEdit ? (
-                  <p>$ {settings.falsehood_fee} USD</p>
+                  <p>$ {settings.falsehood_fee} USD <span>({settings.falsehood_fee_CAD.toFixed(2)} CAD)</span></p>
                 ) : (
-                  <input
-                    value={feesEdit?.falsehood_fee}
-                    onChange={e =>
-                      setFeesEdit({
-                        ...feesEdit,
-                        falsehood_fee: e.target.value
-                      })
-                    }
-                  />
+                  <>
+                      <input
+                        value={feesEdit?.falsehood_fee}
+                        onChange={e =>
+                          setFeesEdit({
+                            ...feesEdit,
+                            falsehood_fee: e.target.value
+                          })
+                        }
+                      />
+                      <span style={{marginLeft:10}}>USD</span>
+                  </>
                 )}
               </div>
               <button
