@@ -8,7 +8,8 @@ export const ItemOrder = ({
   setEmailUser,
   toggleModal,
   setOrders,
-  orders
+  orders,
+  settings = null
 }) => {
   const [loadingOrderPaid, setLoadingOrderPaid] = useState(false)
 
@@ -94,8 +95,17 @@ export const ItemOrder = ({
       </div>
 
       <div>
-        <p style={{color: item?.expired < 0 ? 'red' : ''}}>{formatHours(item?.expired)}</p>
-        {item?.expired < 0 && <p style={{marginTop:10, fontWeight:'bold'}}>fees: <span style={{color:"darkblue"}}>{calculateFees(item?.expired)} USD</span></p>}
+        <p style={{ color: item?.expired < 0 ? 'red' : '' }}>
+          {formatHours(item?.expired)}
+        </p>
+        {item?.expired < 0 && settings && (
+          <p style={{ marginTop: 10, fontWeight: 'bold' }}>
+            fees:{' '}
+            <span style={{ color: 'darkblue' }}>
+              {calculateFees(item?.expired, settings?.accommodation_fee)} USD
+            </span>
+          </p>
+        )}
       </div>
 
       <div>
@@ -129,6 +139,6 @@ export const ItemOrder = ({
   )
 }
 
-const calculateFees = (expired) => {
-    return (Math.abs((expired)*2.5/720)).toFixed(2)
+const calculateFees = (expired, acc_fee) => {
+  return Math.abs((expired * acc_fee) / 720).toFixed(2)
 }

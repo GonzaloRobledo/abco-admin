@@ -10,8 +10,10 @@ import exceljs from 'exceljs'
 import { downloadExcel } from '../../../../utils/downloadExcel'
 import { getAllSold } from '../../../../api/orders/getAllSold'
 import { compareDates } from '../../../../utils/compareDates'
+import { getSettings } from '../../../../api/settings/getSettings'
 
 export const MainFinished = () => {
+    const [settings, setSettings] = useState(null);
   const [visibleModal, setVisibleModal] = useState(false)
   const [loading, setLoading] = useState(true)
   const [locations, setLocations] = useState([])
@@ -35,6 +37,7 @@ export const MainFinished = () => {
     if (token) {
       verifyAdmin(token)
       getLoc(token)
+      getSett(token)
     } else navigate('/')
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,6 +93,12 @@ export const MainFinished = () => {
     orders?.orders?.forEach(el => users_set.add(el.user_id))
     setUsers([...users_set])
     setLoading(false)
+  }
+
+
+  const getSett = async (token) => {
+    const sett = await getSettings(token);
+    if(sett?.ok) setSettings(sett?.settings[0])
   }
 
   const getLoc = async token => {
@@ -317,6 +326,7 @@ export const MainFinished = () => {
                     setEmailUser={setEmailUser}
                     setOrders={setOrders}
                     orders={orders}
+                    settings={settings}
                   />
                 ))}
               </ul>
