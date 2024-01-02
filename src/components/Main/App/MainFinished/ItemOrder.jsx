@@ -94,8 +94,8 @@ export const ItemOrder = ({
       </div>
 
       <div>
-        {' '}
-        <p>{formatHours(item?.expired)}</p>
+        <p style={{color: item?.expired < 0 ? 'red' : ''}}>{formatHours(item?.expired)}</p>
+        {item?.expired < 0 && <p style={{marginTop:10, fontWeight:'bold'}}>fees: <span style={{color:"darkblue"}}>{calculateFees(item?.expired)} USD</span></p>}
       </div>
 
       <div>
@@ -127,4 +127,8 @@ export const ItemOrder = ({
       </div>
     </li>
   )
+}
+
+const calculateFees = (expired) => {
+    return (Math.abs((expired)*2.5/720)).toFixed(2)
 }
