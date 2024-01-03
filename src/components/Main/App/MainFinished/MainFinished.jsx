@@ -11,6 +11,7 @@ import { downloadExcel } from '../../../../utils/downloadExcel'
 import { getAllSold } from '../../../../api/orders/getAllSold'
 import { compareDates } from '../../../../utils/compareDates'
 import { getSettings } from '../../../../api/settings/getSettings'
+import { calculateFees } from '../../../../utils/calculateFees'
 
 export const MainFinished = () => {
     const [settings, setSettings] = useState(null);
@@ -146,12 +147,11 @@ export const MainFinished = () => {
         let fees = '--',
           expired_hs = '--'
         if (ord?.expired) {
-          fees =
-            ord?.expired >= 0
-              ? 0
-              : Math.round(Math.abs((ord?.expired / 720) * 2.5))
+          fees = calculateFees(ord?.expired, settings?.accommodation_fee_CAD)
           expired_hs = ord?.expired >= 0 ? 0 : Math.abs(ord?.expired)
         }
+
+        const total_payout = (ord?.quantity * ord?.payout) - (isNaN(fees) ? 0 : fees)
 
         const data = [
           ord?.user_id,
@@ -165,7 +165,7 @@ export const MainFinished = () => {
           isNaN(fees) ? '--' : fees,
           expired_hs,
           ord?.quantity || 1,
-          ord?.quantity * ord?.payout,
+          total_payout,
           ord?.createdAt?.split('T')[0]
         ]
 

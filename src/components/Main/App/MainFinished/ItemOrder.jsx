@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { formatHours } from '../../../../utils/formatHours'
 import { updateOrderPaid } from '../../../../api/orders/updateOrderPaid'
+import { calculateFees } from '../../../../utils/calculateFees'
 
 export const ItemOrder = ({
   item,
@@ -102,14 +103,14 @@ export const ItemOrder = ({
           <p style={{ marginTop: 10, fontWeight: 'bold' }}>
             fees:{' '}
             <span style={{ color: 'darkblue' }}>
-              {calculateFees(item?.expired, settings?.accommodation_fee)} USD
+              {calculateFees(item?.expired, settings?.accommodation_fee_CAD)} CAD
             </span>
           </p>
         )}
       </div>
 
       <div>
-        <p>${item?.payout}</p>
+        <p>${item?.payout - calculateFees(item?.expired, settings?.accommodation_fee_CAD)}</p>
       </div>
 
       <div>
@@ -139,6 +140,3 @@ export const ItemOrder = ({
   )
 }
 
-const calculateFees = (expired, acc_fee) => {
-  return Math.abs((expired * acc_fee) / 720).toFixed(2)
-}
