@@ -25,6 +25,7 @@ export const MainPendings = () => {
   const navigate = useNavigate()
   const [sellNow, setSellNow] = useState(null)
   const [users, setUsers] = useState([])
+  const [acceptedTime, setAcceptedTime] = useState(false)
 
   const toggleModal = () => setVisibleModal(!visibleModal)
 
@@ -220,6 +221,8 @@ export const MainPendings = () => {
                     locations={locations}
                     toggleModal={toggleModal}
                     setEmailUser={setEmailUser}
+                    acceptedTime={acceptedTime}
+                    setAcceptedTime={setAcceptedTime}
                   />
                 ))}
               </ul>

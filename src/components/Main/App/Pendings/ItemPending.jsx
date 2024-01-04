@@ -13,7 +13,9 @@ export const ItemPending = ({
   locations,
   setEmailUser,
   toggleModal,
-  sellNow
+  sellNow,
+  acceptedTime = false,
+  setAcceptedTime = () => {}
 }) => {
   const [loadingAccept, setLoadingAccept] = useState(false)
   const [loadingDenied, setLoadingDenied] = useState(false)
@@ -30,7 +32,7 @@ export const ItemPending = ({
   createdAt = `${createdAt} // ${horas >= 10 ? horas : `0${horas}`}:${
     minutos >= 10 ? minutos : `0${minutos}`
   }:${segundos >= 10 ? segundos : `0${segundos}`}`
-  
+
   let location = locations?.find(el => el.id == item?.location_id)
 
   if (item?.is_online) {
@@ -64,6 +66,7 @@ export const ItemPending = ({
     )
 
     if (confirm) {
+      setAcceptedTime(true)
       setLoadingAccept(true)
       const token = localStorage.getItem('tokenAdmin')
       const res = await acceptSelling(token, item)
@@ -71,29 +74,31 @@ export const ItemPending = ({
       if (res?.ok) {
         const new_pendings = pendings?.filter(el => el._id != item?._id)
         setPendings(new_pendings)
-      }else{
+      } else {
         window.alert(res?.error)
       }
       console.log({ res })
     }
-
+    setAcceptedTime(false)
     setLoadingAccept(false)
   }
 
   const handleAcceptSellNow = async () => {
     const confirm = window.confirm('Are you sure that you want to accept?')
     setLoadingAccept(true)
+    setAcceptedTime(true)
 
     if (!confirm) return
 
     const token = localStorage.getItem('tokenAdmin')
-    const res = await acceptSellNow(token, {...item, is_sell_now:true})
+    const res = await acceptSellNow(token, { ...item, is_sell_now: true })
     console.log({ res })
     if (res?.ok) {
       const new_pendings = pendings?.filter(el => el._id != item?._id)
       setPendings(new_pendings)
     }
 
+    setAcceptedTime(false)
     setLoadingAccept(false)
   }
 
@@ -167,7 +172,7 @@ export const ItemPending = ({
         <p className='pending_payment_method'>
           Payment Method: {item?.method_payment}
         </p>
-        {item?._id && <p className="order_id_itemOrder">id: {item?._id}</p>}
+        {item?._id && <p className='order_id_itemOrder'>id: {item?._id}</p>}
       </div>
 
       <div>{!item?.tracking ? <p>NO</p> : <p>{item?.tracking}</p>}</div>
@@ -205,23 +210,39 @@ export const ItemPending = ({
         </div>
       </div>
 
-      {item?.received || item?.denied ? <div>
-        {!item?.denied && (
-          <button
-            className='btn_accept_selling'
-            onClick={() => (!sellNow ? handleAccept() : handleAcceptSellNow())}
-          >
-            {!loadingAccept ? 'Accept' : 'Loading...'}
+      {item?.received || item?.denied ? (
+        <div>
+          {!item?.denied && (
+            <button
+              className='btn_accept_selling'
+              onClick={() =>
+                !acceptedTime
+                  ? !sellNow
+                    ? handleAccept()
+                    : handleAcceptSellNow()
+                  : console.log('Disabled')
+              }
+            >
+              {!loadingAccept
+                ? !acceptedTime
+                  ? 'Accept'
+                  : 'Await...'
+                : 'Loading...'}
+            </button>
+          )}
+          <button className='btn_denied_selling' onClick={handleDenied}>
+            {!loadingDenied
+              ? item?.denied
+                ? 'Deny again'
+                : 'Deny'
+              : 'Loading...'}
           </button>
-        )}
-        <button className='btn_denied_selling' onClick={handleDenied}>
-          {!loadingDenied
-            ? item?.denied
-              ? 'Deny again'
-              : 'Deny'
-            : 'Loading...'}
-        </button>
-      </div> : <p className="message_please_receive">Please Receive Item Before Authenticating</p>}
+        </div>
+      ) : (
+        <p className='message_please_receive'>
+          Please Receive Item Before Authenticating
+        </p>
+      )}
     </li>
   )
 }
