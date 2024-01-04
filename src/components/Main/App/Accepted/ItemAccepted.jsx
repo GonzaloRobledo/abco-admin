@@ -59,9 +59,9 @@ export const ItemAccepted = ({
           {item?.user_id}
         </h5>
         <h6 className='type_request' style={{ color: 'black' }}>
-          <span>
+          {item?.delivery_method ? <span>
             {item?.delivery_method[0] == 'inStore' ? 'Drop Off' : 'Shipping'}
-          </span>
+          </span> : <span/>}
         </h6>
         <p className='pending_payment_method'>
           Payment Method: {item?.method_payment}
