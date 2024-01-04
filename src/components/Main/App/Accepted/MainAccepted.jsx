@@ -8,8 +8,11 @@ import { ItemAccepted } from './ItemAccepted'
 import { InfoModalProfile } from '../Pendings/InfoModalProfile'
 import { getAccepted } from '../../../../api/sellings/getAccepted'
 import { compareDates } from '../../../../utils/compareDates'
+import { calculateFees } from '../../../../utils/calculateFees'
+import { getSettings } from '../../../../api/settings/getSettings'
 
 export const MainAccepted = () => {
+    const [settings, setSettings] = useState({})
   const [visibleModal, setVisibleModal] = useState(false)
   const [loading, setLoading] = useState(true)
   const [accepteds, setAccepteds] = useState([])
@@ -19,7 +22,7 @@ export const MainAccepted = () => {
     email: '',
     location_id: ''
   })
-  const [totalCAD, setTotalCAD] = useState(0)
+  const [totalCAD, setTotalCAD] = useState({total: 0, fees: 0})
   const [users, setUsers] = useState([])
   const [locations, setLocations] = useState([])
   const [emailUser, setEmailUser] = useState('')
@@ -75,6 +78,7 @@ export const MainAccepted = () => {
     if (token) {
       verifyAdmin(token)
       getLoc(token)
+      getSett(token)
     } else navigate('/')
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,15 +115,22 @@ export const MainAccepted = () => {
     setFilters({ ...filters, location_id })
   }
 
+  const getSett = async (token) => {
+    const sett = await getSettings(token);
+    if(sett?.ok) setSettings(sett?.settings[0])
+  }
+
   useEffect(() => {
     if (acceptedsFilter?.length > 0) {
-      let total = 0
+      let total = 0, total_fees = 0;
       acceptedsFilter?.forEach(el => {
         total += el?.user_payout
+        if(el?.expired) total_fees += calculateFees(el?.expired, settings?.accommodation_fee_CAD)
       })
-      setTotalCAD(total)
-    } else setTotalCAD(0)
+      setTotalCAD({total: total - total_fees, fees: parseFloat(total_fees.toFixed(1))});
+    } else setTotalCAD({total: 0, fees: 0})
   }, [acceptedsFilter])
+
 
   return (
     <>
@@ -138,7 +149,11 @@ export const MainAccepted = () => {
             </div>
             <div>
               <p>CAD: </p>
-              <span>${totalCAD.toFixed(1)}</span>
+              <span>${totalCAD?.total?.toFixed(1)}</span>
+            </div>
+            <div>
+              <p>FEES CAD: </p>
+              <span>${totalCAD?.fees}</span>
             </div>
           </div>
 

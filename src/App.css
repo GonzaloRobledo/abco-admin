@@ -372,13 +372,18 @@ body {
     margin:5px 0;
 }
 
-.total_register_container > div:last-child{
+.total_register_container > div{
     margin-top:10px;
+}
+
+.total_register_container > div:first-child{
+    margin-top:0;
 }
 
 .total_register_container > div p{
     color:#004478;
     font-weight: bold;
+    font-size:14px;
 }
 
 .total_register_container > div span{

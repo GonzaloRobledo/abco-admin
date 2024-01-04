@@ -103,14 +103,26 @@ export const ItemOrder = ({
           <p style={{ marginTop: 10, fontWeight: 'bold' }}>
             fees:{' '}
             <span style={{ color: 'darkblue' }}>
-              {calculateFees(item?.expired, settings?.accommodation_fee_CAD)} CAD
+              {calculateFees(item?.expired, settings?.accommodation_fee_CAD)}{' '}
+              CAD
             </span>
           </p>
         )}
       </div>
 
       <div>
-        <p>${item?.payout - calculateFees(item?.expired, settings?.accommodation_fee_CAD)}</p>
+        {calculateFees(item?.expired, settings?.accommodation_fee_CAD) == 0 ? (
+          <p style={{marginTop:7.5, fontSize:20, color: '#1573B9', fontWeight:'bold'}}>${item?.payout}</p>
+        ) : (
+          <>
+            <p style={{ textDecoration: 'line-through' }}>${item?.payout}</p>
+            <p style={{marginTop:7.5, fontSize:20, color: '#1573B9', fontWeight:'bold'}}>
+              $
+              {item?.payout -
+                calculateFees(item?.expired, settings?.accommodation_fee_CAD)}
+            </p>
+          </>
+        )}
       </div>
 
       <div>
@@ -139,4 +151,3 @@ export const ItemOrder = ({
     </li>
   )
 }
-

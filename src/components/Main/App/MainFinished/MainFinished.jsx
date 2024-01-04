@@ -21,7 +21,7 @@ export const MainFinished = () => {
   const [emailUser, setEmailUser] = useState('')
   const navigate = useNavigate()
   const [orders, setOrders] = useState([])
-  const [totalCAD, setTotalCAD] = useState(0)
+  const [totalCAD, setTotalCAD] = useState({total: 0, fees: 0})
   const [ordersFilter, setOrdersFilter] = useState([])
   const [filters, setFilters] = useState({
     search: '',
@@ -231,12 +231,13 @@ export const MainFinished = () => {
 
   useEffect(() => {
     if (ordersFilter?.length > 0) {
-      let total = 0
+      let total = 0, total_fees = 0;
       ordersFilter?.forEach(el => {
         total += el?.payout
+        if(el?.expired) total_fees += calculateFees(el?.expired, settings?.accommodation_fee_CAD)
       })
-      setTotalCAD(total)
-    } else setTotalCAD(0)
+      setTotalCAD({total: total - total_fees, fees: parseFloat(total_fees.toFixed(1))});
+    } else setTotalCAD({total: 0, fees: 0})
   }, [ordersFilter])
 
   return (
@@ -272,7 +273,11 @@ export const MainFinished = () => {
             </div>
             <div>
               <p>CAD: </p>
-              <span>${totalCAD.toFixed(1)}</span>
+              <span>${totalCAD?.total?.toFixed(1)}</span>
+            </div>
+            <div>
+              <p>FEES CAD: </p>
+              <span>${totalCAD?.fees}</span>
             </div>
           </div>
 

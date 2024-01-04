@@ -9,6 +9,7 @@ import { getAllClosed } from '../../../../api/orders/getAllClosed'
 import { ItemOrder } from '../MainFinished/ItemOrder'
 import { compareDates } from '../../../../utils/compareDates'
 import { getSettings } from '../../../../api/settings/getSettings'
+import { calculateFees } from '../../../../utils/calculateFees'
 
 export const MainClosed = () => {
     const [settings, setSettings] = useState(null)
@@ -24,7 +25,7 @@ export const MainClosed = () => {
     email: '',
     location_id: ''
   })
-  const [totalCAD, setTotalCAD] = useState(0)
+  const [totalCAD, setTotalCAD] = useState({total: 0, fees: 0})
   const [users, setUsers] = useState([])
 
   const toggleModal = () => setVisibleModal(!visibleModal)
@@ -118,12 +119,13 @@ export const MainClosed = () => {
 
   useEffect(() => {
     if (ordersFilter?.length > 0) {
-      let total = 0
+      let total = 0, total_fees = 0;
       ordersFilter?.forEach(el => {
         total += el?.payout
+        if(el?.expired) total_fees += calculateFees(el?.expired, settings?.accommodation_fee_CAD)
       })
-      setTotalCAD(total)
-    } else setTotalCAD(0)
+      setTotalCAD({total: total - total_fees, fees: parseFloat(total_fees.toFixed(1))});
+    } else setTotalCAD({total: 0, fees: 0})
   }, [ordersFilter])
 
   return (
@@ -151,7 +153,11 @@ export const MainClosed = () => {
             </div>
             <div>
               <p>CAD: </p>
-              <span>${totalCAD.toFixed(1)}</span>
+              <span>${totalCAD?.total?.toFixed(1)}</span>
+            </div>
+            <div>
+              <p>FEES CAD: </p>
+              <span>${totalCAD?.fees}</span>
             </div>
           </div>
 
