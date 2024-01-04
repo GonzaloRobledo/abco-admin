@@ -215,6 +215,9 @@ export const ItemPending = ({
           {!item?.denied && (
             <button
               className='btn_accept_selling'
+              style={{
+                backgroundColor: !acceptedTime || loadingAccept ? '' : 'grey'
+              }}
               onClick={() =>
                 !acceptedTime
                   ? !sellNow
