@@ -7,9 +7,9 @@ import { getLocations } from '../../../../api/locations/getLocations'
 import { ItemAccepted } from './ItemAccepted'
 import { InfoModalProfile } from '../Pendings/InfoModalProfile'
 import { getAccepted } from '../../../../api/sellings/getAccepted'
-import { compareDates } from '../../../../utils/compareDates'
 import { calculateFees } from '../../../../utils/calculateFees'
 import { getSettings } from '../../../../api/settings/getSettings'
+import { compareAcceptedDates } from '../../../../utils/compareAcceptedDates'
 
 export const MainAccepted = () => {
     const [settings, setSettings] = useState({})
@@ -95,8 +95,8 @@ export const MainAccepted = () => {
     const data = await verifyTokenAdmin(token)
     if (!data?.ok) navigate('/')
     const acceptedData = await getAccepted(token)
-    setAccepteds(acceptedData?.accepted?.sort(compareDates) || [])
-    setAcceptedsFilter(acceptedData?.accepted?.sort(compareDates) || [])
+    setAccepteds(acceptedData?.accepted?.sort(compareAcceptedDates) || [])
+    setAcceptedsFilter(acceptedData?.accepted?.sort(compareAcceptedDates) || [])
     const users_set = new Set()
     acceptedData?.accepted?.forEach(el => users_set.add(el.user_id))
     setUsers([...users_set])
