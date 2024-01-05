@@ -196,6 +196,7 @@ export const MainAccepted = () => {
                 <h4>Payout</h4>
                 <h4>Sell in</h4>
                 <h4>Drop Off / Shipping in</h4>
+                <h4>-</h4>
               </div>
 
               {/*ITEMS*/}
@@ -207,6 +208,8 @@ export const MainAccepted = () => {
                     locations={locations}
                     toggleModal={toggleModal}
                     setEmailUser={setEmailUser}
+                    setAcceptedsFilter={setAcceptedsFilter}
+                    acceptedsFilter={acceptedsFilter}
                   />
                 ))}
               </ul>
