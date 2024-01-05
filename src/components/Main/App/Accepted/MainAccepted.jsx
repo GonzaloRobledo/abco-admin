@@ -31,7 +31,6 @@ export const MainAccepted = () => {
   const toggleModal = () => setVisibleModal(!visibleModal)
 
   useEffect(() => {
-    console.log(accepteds)
     if (accepteds?.length > 0) {
       filter_function()
     }
@@ -95,10 +94,14 @@ export const MainAccepted = () => {
     const data = await verifyTokenAdmin(token)
     if (!data?.ok) navigate('/')
     const acceptedData = await getAccepted(token)
-    setAccepteds(acceptedData?.accepted?.sort(compareAcceptedDates) || [])
-    setAcceptedsFilter(acceptedData?.accepted?.sort(compareAcceptedDates) || [])
+    acceptedData?.accepted?.sort(compareAcceptedDates)
+    const acc = acceptedData?.accepted?.filter(el => el.accepted_date)
+    const not_acc = acceptedData?.accepted?.filter(el => !el.accepted_date)
+    const order_data = [...acc, ...not_acc]
+    setAccepteds(order_data || [])
+    setAcceptedsFilter(order_data || [])
     const users_set = new Set()
-    acceptedData?.accepted?.forEach(el => users_set.add(el.user_id))
+    order_data?.forEach(el => users_set.add(el.user_id))
     setUsers([...users_set])
     setLoading(false)
   }
