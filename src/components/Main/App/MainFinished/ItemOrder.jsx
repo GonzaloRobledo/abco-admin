@@ -93,6 +93,7 @@ export const ItemOrder = ({
         {item?.order_id && (
           <p className='order_id_itemOrder'>Order Id: {item?.order_id}</p>
         )}
+        <p className='product_id'>PROD: {item.product_id} | {item.variant_id}</p>
       </div>
 
       <div>

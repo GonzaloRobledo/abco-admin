@@ -391,6 +391,13 @@ body {
     font-weight: bold;
 }
 
+.product_id{
+    font-size:12px;
+    margin-top:10px;
+    font-weight: bold;
+    color:#FA6C2C;
+}
+
 .main-pendings_titles {
     display: flex;
     justify-content: space-between;

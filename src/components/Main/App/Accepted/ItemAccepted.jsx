@@ -92,6 +92,7 @@ export const ItemAccepted = ({
           Payment Method: {item?.method_payment}
         </p>
         {item?._id && <p className="order_id_itemOrder">id: {item?._id}</p>}
+        <p className='product_id'>PROD: {item.product_id} | {item.variant_id}</p>
       </div>
 
       <div>
