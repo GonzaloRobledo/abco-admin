@@ -111,7 +111,7 @@ export const ItemAccepted = ({
       </div>
 
       <div>
-        <button onClick={createOrderManually} className='order_paid_button'>{!loading ? 'Manully Order' : 'Loading...'}</button>
+        <button onClick={createOrderManually} className='order_paid_button'>{!loading ? 'Manual Order' : 'Loading...'}</button>
       </div>
     </li>
   )
