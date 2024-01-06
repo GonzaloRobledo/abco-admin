@@ -15,6 +15,7 @@ export const ItemPending = ({
   toggleModal,
   sellNow,
   acceptedTime = false,
+  viewDenieds,
   setAcceptedTime = () => {}
 }) => {
   const [loadingAccept, setLoadingAccept] = useState(false)
@@ -125,6 +126,8 @@ export const ItemPending = ({
     }
     setLoadingDenied(false)
   }
+
+  if(!viewDenieds && item?.denied) return null
 
   return (
     <li

@@ -398,6 +398,14 @@ body {
     color:#FA6C2C;
 }
 
+.btn_viewDenieds{
+    color:white;
+    padding:0 20px;
+    cursor: pointer;
+    border:none;
+    font-weight: bold;
+}
+
 .main-pendings_titles {
     display: flex;
     justify-content: space-between;

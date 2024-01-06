@@ -26,6 +26,7 @@ export const MainPendings = () => {
   const [sellNow, setSellNow] = useState(null)
   const [users, setUsers] = useState([])
   const [acceptedTime, setAcceptedTime] = useState(false)
+  const [viewDenieds, setViewDenieds] = useState(true)
 
   const toggleModal = () => setVisibleModal(!visibleModal)
 
@@ -166,7 +167,13 @@ export const MainPendings = () => {
             </div>
           </div>
           <p className='total_registers'>
-            Total: <span>{pendingsFilter?.length}</span>
+            Total:{' '}
+            <span>
+              {pendingsFilter?.length -
+                (viewDenieds
+                  ? 0
+                  : pendingsFilter?.filter(el => el.denied)?.length)}
+            </span>
           </p>
 
           <div className='filters_styles_publications'>
@@ -194,6 +201,15 @@ export const MainPendings = () => {
               placeholder='Search'
               onChange={e => setFilters({ ...filters, search: e.target.value })}
             />
+            <button
+              onClick={() => setViewDenieds(!viewDenieds)}
+              className='btn_viewDenieds'
+              style={{
+                backgroundColor: viewDenieds ? 'rgb(185, 0, 0)' : 'grey'
+              }}
+            >
+              {viewDenieds ? 'Hide Denieds' : 'Show Denieds'}
+            </button>
           </div>
 
           <div style={{ overflow: 'auto', margin: '30px 0' }}>
@@ -223,6 +239,7 @@ export const MainPendings = () => {
                     setEmailUser={setEmailUser}
                     acceptedTime={acceptedTime}
                     setAcceptedTime={setAcceptedTime}
+                    viewDenieds={viewDenieds}
                   />
                 ))}
               </ul>
