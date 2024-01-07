@@ -208,8 +208,8 @@ export const MainAccepted = () => {
                     locations={locations}
                     toggleModal={toggleModal}
                     setEmailUser={setEmailUser}
-                    setAcceptedsFilter={setAcceptedsFilter}
-                    acceptedsFilter={acceptedsFilter}
+                    setAcceptedsFilter={setAccepteds}
+                    acceptedsFilter={accepteds}
                   />
                 ))}
               </ul>

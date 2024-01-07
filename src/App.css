@@ -1561,6 +1561,15 @@ font-size:22px;
     transition: all 0.2s ease;
 }
 
+.order_return_button{
+    color: white !important;
+}
+
+.order_return_button:hover{
+    background-color: inherit !important;
+    color:rgb(197, 0, 0) !important;
+}
+
 .order_paid_button:hover{
     background-color: inherit;
     color: #004478;

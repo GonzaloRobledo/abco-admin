@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { formatHours } from '../../../../utils/formatHours'
 import { updateOrderPaid } from '../../../../api/orders/updateOrderPaid'
 import { calculateFees } from '../../../../utils/calculateFees'
+import { returnOrder } from '../../../../api/orders/returnOrder'
 
 export const ItemOrder = ({
   item,
@@ -13,6 +14,7 @@ export const ItemOrder = ({
   settings = null
 }) => {
   const [loadingOrderPaid, setLoadingOrderPaid] = useState(false)
+  const [loadingReturn, setLoadingReturn] = useState(false)
 
   const prod = item?.product
   const variant = prod?.variants?.find(el => el.variant_id == item?.variant_id)
@@ -50,6 +52,29 @@ export const ItemOrder = ({
       const new_orders = orders?.filter(el => el._id != item?._id)
       setOrders(new_orders)
     }
+  }
+
+  const returnOrderToSelling = async () => {
+    const confirm = window.confirm("Are you sure you want to perform this action? If you proceed with the product return, a new selling will be created, the consignor will be added, but the quantity in Shopify will not be increased. Therefore, before accepting, verify that a product return has occurred, and the quantity has been preset in Shopify.");
+
+    if(!confirm) return
+
+    const confirm2 = window.confirm("2FA: Sure? This action can't be undone.");
+
+    if(!confirm2) return;
+
+    setLoadingReturn(true)
+
+    const token = localStorage.getItem('tokenAdmin');
+    const res = await returnOrder(token, item?._id );
+
+    console.log({token, res})
+
+    if(res?.ok){
+        const new_orders = orders.filter(el => el._id != item?._id);
+        setOrders(new_orders);
+    }
+    setLoadingReturn(false)
   }
 
   return (
@@ -93,7 +118,9 @@ export const ItemOrder = ({
         {item?.order_id && (
           <p className='order_id_itemOrder'>Order Id: {item?.order_id}</p>
         )}
-        <p className='product_id'>PROD: {item.product_id} | {item.variant_id}</p>
+        <p className='product_id'>
+          PROD: {item.product_id} | {item.variant_id}
+        </p>
       </div>
 
       <div>
@@ -113,11 +140,27 @@ export const ItemOrder = ({
 
       <div>
         {calculateFees(item?.expired, settings?.accommodation_fee_CAD) == 0 ? (
-          <p style={{marginTop:7.5, fontSize:20, color: '#1573B9', fontWeight:'bold'}}>${item?.payout}</p>
+          <p
+            style={{
+              marginTop: 7.5,
+              fontSize: 20,
+              color: '#1573B9',
+              fontWeight: 'bold'
+            }}
+          >
+            ${item?.payout}
+          </p>
         ) : (
           <>
             <p style={{ textDecoration: 'line-through' }}>${item?.payout}</p>
-            <p style={{marginTop:7.5, fontSize:20, color: '#1573B9', fontWeight:'bold'}}>
+            <p
+              style={{
+                marginTop: 7.5,
+                fontSize: 20,
+                color: '#1573B9',
+                fontWeight: 'bold'
+              }}
+            >
               $
               {item?.payout -
                 calculateFees(item?.expired, settings?.accommodation_fee_CAD)}
@@ -144,9 +187,23 @@ export const ItemOrder = ({
             PAID!
           </p>
         ) : (
-          <button onClick={handleOrderPaid} className='order_paid_button'>
-            {!loadingOrderPaid ? 'Order paid' : 'Loading...'}
-          </button>
+          <div>
+            <button onClick={handleOrderPaid} className='order_paid_button'>
+              {!loadingOrderPaid ? 'Order paid' : 'Loading...'}
+            </button>
+            <button
+              className='order_return_button order_paid_button'
+              style={{
+                margin: '0 auto',
+                marginTop: 10,
+                backgroundColor: 'rgb(197, 0, 0)',
+                border: '2px solid rgb(197, 0, 0)'
+              }}
+              onClick={returnOrderToSelling}
+            >
+              {!loadingReturn ? 'Return Order' : 'Loading...'}
+            </button>
+          </div>
         )}
       </div>
     </li>
