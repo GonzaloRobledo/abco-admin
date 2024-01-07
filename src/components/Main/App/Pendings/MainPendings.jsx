@@ -51,7 +51,7 @@ export const MainPendings = () => {
           variant?.SKU?.toLowerCase().includes(lower) ||
           product?.SKU?.toLowerCase().includes(lower) ||
           el?.user_id?.toLowerCase()?.includes(lower) ||
-          product?.product_id?.includes(lower) ||
+          el?.product_id?.includes(lower) ||
           el._id?.includes(lower)
         )
       })

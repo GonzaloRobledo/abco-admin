@@ -45,14 +45,14 @@ export const MainAccepted = () => {
         const variant = product?.variants?.find(
           variant => variant.variant_id == el?.variant_id
         )
-        const date = el?.createdAt ? el?.createdAt?.split('T')[0] : null
+        const date = el?.accepted_date ? el?.accepted_date?.split('T')[0] : el?.createdAt?.split('T')[0]
         return (
           product?.title?.toLowerCase().includes(lower) ||
           variant?.variant_id?.toLowerCase().includes(lower) ||
           variant?.SKU?.toLowerCase().includes(lower) ||
           product?.SKU?.toLowerCase().includes(lower) ||
           el?.user_id?.toLowerCase()?.includes(lower) ||
-          product?.product_id?.includes(lower) ||
+          el?.product_id?.includes(lower) ||
           date?.includes(lower) ||
           el._id?.includes(lower)
         )
