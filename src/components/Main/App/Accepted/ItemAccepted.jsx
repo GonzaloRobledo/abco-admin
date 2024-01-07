@@ -14,7 +14,7 @@ export const ItemAccepted = ({
   const prod = item?.product
   const variant = prod?.variants?.find(el => el.variant_id == item.variant_id)
   let createdAt = item?.accepted_date ? item?.accepted_date?.split('T')[0] : item?.createdAt?.split('T')[0]
-  const fechaHora = new Date(item?.createdAt)
+  const fechaHora = new Date(item?.accepted_date || item?.createdAt)
 
   // Obtener la hora, minutos y segundos
   const horas = fechaHora.getUTCHours()
@@ -57,7 +57,7 @@ export const ItemAccepted = ({
       <div>
         <img
           src={prod?.image?.src || prod?.images[0]?.src}
-          alt={prod?.vendor}
+          alt={prod?.title}
           style={{ width: 100, height: 100 }}
         />
         <p>S{variant?.size}</p>

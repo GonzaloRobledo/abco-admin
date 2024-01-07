@@ -12,7 +12,7 @@ import { getSettings } from '../../../../api/settings/getSettings'
 import { compareAcceptedDates } from '../../../../utils/compareAcceptedDates'
 
 export const MainAccepted = () => {
-    const [settings, setSettings] = useState({})
+  const [settings, setSettings] = useState({})
   const [visibleModal, setVisibleModal] = useState(false)
   const [loading, setLoading] = useState(true)
   const [accepteds, setAccepteds] = useState([])
@@ -22,7 +22,7 @@ export const MainAccepted = () => {
     email: '',
     location_id: ''
   })
-  const [totalCAD, setTotalCAD] = useState({total: 0, fees: 0})
+  const [totalCAD, setTotalCAD] = useState({ total: 0, fees: 0 })
   const [users, setUsers] = useState([])
   const [locations, setLocations] = useState([])
   const [emailUser, setEmailUser] = useState('')
@@ -91,9 +91,12 @@ export const MainAccepted = () => {
   }, [accepteds])
 
   const verifyAdmin = async token => {
+    console.log('loading 1')
     const data = await verifyTokenAdmin(token)
     if (!data?.ok) navigate('/')
+    console.log('loading 2')
     const acceptedData = await getAccepted(token)
+    console.log('Data Ready!')
     acceptedData?.accepted?.sort(compareAcceptedDates)
     const acc = acceptedData?.accepted?.filter(el => el.accepted_date)
     const not_acc = acceptedData?.accepted?.filter(el => !el.accepted_date)
@@ -118,22 +121,29 @@ export const MainAccepted = () => {
     setFilters({ ...filters, location_id })
   }
 
-  const getSett = async (token) => {
-    const sett = await getSettings(token);
-    if(sett?.ok) setSettings(sett?.settings[0])
+  const getSett = async token => {
+    const sett = await getSettings(token)
+    if (sett?.ok) setSettings(sett?.settings[0])
   }
 
   useEffect(() => {
     if (acceptedsFilter?.length > 0) {
-      let total = 0, total_fees = 0;
+      let total = 0,
+        total_fees = 0
       acceptedsFilter?.forEach(el => {
         total += el?.user_payout
-        if(el?.expired) total_fees += calculateFees(el?.expired, settings?.accommodation_fee_CAD)
+        if (el?.expired)
+          total_fees += calculateFees(
+            el?.expired,
+            settings?.accommodation_fee_CAD
+          )
       })
-      setTotalCAD({total: total - total_fees, fees: parseFloat(total_fees.toFixed(1))});
-    } else setTotalCAD({total: 0, fees: 0})
+      setTotalCAD({
+        total: total - total_fees,
+        fees: parseFloat(total_fees.toFixed(1))
+      })
+    } else setTotalCAD({ total: 0, fees: 0 })
   }, [acceptedsFilter])
-
 
   return (
     <>
