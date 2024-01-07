@@ -1359,7 +1359,6 @@ font-size:22px;
     font-size: 18px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
 }
 
 .quantity{
@@ -1579,6 +1578,19 @@ font-size:22px;
     display: flex;
     justify-content: center;
     gap:25px;
+}
+
+.format_createdAt{
+    color: orangered !important;
+    font-style: italic;
+    font-weight:700;
+}
+
+.format_createdAt span{
+    font-size:14px;
+    color:darkblue !important;
+    font-style: normal;
+    margin-left:5px;
 }
 
 .filters_styles_publications input, .filters_styles_publications select{

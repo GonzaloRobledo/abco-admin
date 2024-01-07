@@ -142,6 +142,7 @@ export const ItemPending = ({
           style={{ width: 100, height: 100 }}
         />
         <p>S{variant?.size}</p>
+        <p style={{fontSize:13, marginTop:10, fontStyle:'italic'}}>{variant?.SKU}</p>
       </div>
 
       <div style={{ paddingLeft: 15 }}>
@@ -151,9 +152,8 @@ export const ItemPending = ({
             : prod?.title}
         </h3>
         <div className='sku_vendor sku_vendor_pending'>
-          <p>{variant?.SKU}</p>
           {/* <p>{prod?.vendor}</p> */}
-          <p style={{color:"orangered", fontStyle:'italic'}}>{createdAt} UTC</p>
+          <p className="format_createdAt">{createdAt} <span>(UTC)</span></p>
         </div>
         <h5
           className='pending_user'
