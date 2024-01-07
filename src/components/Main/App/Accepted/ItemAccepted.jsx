@@ -72,7 +72,7 @@ export const ItemAccepted = ({
         <div className='sku_vendor sku_vendor_pending'>
           <p>{variant?.SKU}</p>
           <p>{prod?.vendor}</p>
-          <p>{createdAt}</p>
+          <p>{createdAt} UTC</p>
         </div>
         <h5
           className='pending_user'
