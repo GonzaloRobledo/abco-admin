@@ -22,5 +22,5 @@ export const formatToEST = date => {
   const fechaFormateadaETC = formatoPersonalizadoETC.format(fechaUTC)
   const split = fechaFormateadaETC.split(', ')
   const year_split = split[0].split('/')
-  return `${year_split[2]}-${year_split[0]}-${year_split[1]} // ${split[1]}`
+  return `${year_split[2]}-${year_split[1]}-${year_split[0]} // ${split[1]}`
 }
