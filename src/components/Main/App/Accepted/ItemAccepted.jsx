@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { createOrder } from '../../../../api/sellings/createOrder'
 import { formatHours } from '../../../../utils/formatHours'
+import { formatToEST } from '../../../../utils/formatToEST'
 
 export const ItemAccepted = ({
   item,
@@ -13,17 +14,7 @@ export const ItemAccepted = ({
     const [loading, setLoading] = useState(false)
   const prod = item?.product
   const variant = prod?.variants?.find(el => el.variant_id == item.variant_id)
-  let createdAt = item?.accepted_date ? item?.accepted_date?.split('T')[0] : item?.createdAt?.split('T')[0]
-  const fechaHora = new Date(item?.accepted_date || item?.createdAt)
-
-  // Obtener la hora, minutos y segundos
-  const horas = fechaHora.getUTCHours()
-  const minutos = fechaHora.getUTCMinutes()
-  const segundos = fechaHora.getUTCSeconds()
-
-  createdAt = `${createdAt} // ${horas >= 10 ? horas : `0${horas}`}:${
-    minutos >= 10 ? minutos : `0${minutos}`
-  }:${segundos >= 10 ? segundos : `0${segundos}`}`
+  const createdAt = formatToEST(item?.accepted_date || item?.createdAt)
 
   let location = ''
   if (item?.is_online) {
@@ -73,7 +64,7 @@ export const ItemAccepted = ({
         <div className='sku_vendor sku_vendor_pending'>
           {/* <p>{variant?.SKU}</p> */}
           {/* <p>{prod?.vendor}</p> */}
-          <p className="format_createdAt">{createdAt} <span>(UTC)</span></p>
+          <p className="format_createdAt">{createdAt}</p>
         </div>
         <h5
           className='pending_user'

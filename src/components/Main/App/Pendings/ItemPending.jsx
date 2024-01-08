@@ -5,6 +5,7 @@ import { deniedSelling } from '../../../../api/sellings/deniedSelling'
 import { updateReceivedSellNow } from '../../../../api/sellNow/updateReceived'
 import { deniedSellNow } from '../../../../api/sellings/deniedSellNow'
 import { acceptSellNow } from '../../../../api/sellings/acceptSellNow'
+import { formatToEST } from '../../../../utils/formatToEST'
 
 export const ItemPending = ({
   item,
@@ -22,17 +23,8 @@ export const ItemPending = ({
   const [loadingDenied, setLoadingDenied] = useState(false)
   const prod = item?.product
   const variant = prod?.variants?.find(el => el.variant_id == item.variant_id)
-  let createdAt = item?.createdAt?.split('T')[0]
-  const fechaHora = new Date(item?.createdAt)
 
-  // Obtener la hora, minutos y segundos
-  const horas = fechaHora.getUTCHours()
-  const minutos = fechaHora.getUTCMinutes()
-  const segundos = fechaHora.getUTCSeconds()
-
-  createdAt = `${createdAt} // ${horas >= 10 ? horas : `0${horas}`}:${
-    minutos >= 10 ? minutos : `0${minutos}`
-  }:${segundos >= 10 ? segundos : `0${segundos}`}`
+  const createdAt = formatToEST(item?.createdAt)
 
   let location = locations?.find(el => el.id == item?.location_id)
 
@@ -153,7 +145,7 @@ export const ItemPending = ({
         </h3>
         <div className='sku_vendor sku_vendor_pending'>
           {/* <p>{prod?.vendor}</p> */}
-          <p className="format_createdAt">{createdAt} <span>(UTC)</span></p>
+          <p className="format_createdAt">{createdAt}</p>
         </div>
         <h5
           className='pending_user'
