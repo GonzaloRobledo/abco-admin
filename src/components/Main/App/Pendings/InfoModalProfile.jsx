@@ -8,7 +8,7 @@ export const InfoModalProfile = ({ email }) => {
 
   useEffect(() => {
     if (email) getUserData()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [email])
 
   const getUserData = async () => {
@@ -48,7 +48,12 @@ export const InfoModalProfile = ({ email }) => {
           </li>
           <li>
             <b>Payout Method: </b>
-            {userData?.payout_method} {userData?.payout_method == 'eTransfer' && `( ${userData?.eTransfer_email || `Not set, default: ${userData?.email}`} )`}
+            {userData?.payout_method}{' '}
+            {userData?.payout_method == 'eTransfer' &&
+              `( ${
+                userData?.email_eTransfer ||
+                `Not set, default: ${userData?.email}`
+              } )`}
           </li>
         </ul>
       ) : (
