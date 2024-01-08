@@ -20,7 +20,7 @@ export const ItemOrder = ({
   const prod = item?.product
   const variant = prod?.variants?.find(el => el.variant_id == item?.variant_id)
 
-  const createdAt = formatToEST(item?.accepted_date || item?.createdAt)
+  const createdAt = formatToEST(item?.paid_date || item?.createdAt)
 
   let location = ''
   if (item?.is_online) {
