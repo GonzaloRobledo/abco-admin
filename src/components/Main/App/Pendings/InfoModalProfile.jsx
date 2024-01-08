@@ -48,7 +48,7 @@ export const InfoModalProfile = ({ email }) => {
           </li>
           <li>
             <b>Payout Method: </b>
-            {userData?.payout_method} {userData?.payout_method == 'eTransfer' && `( ${userData?.eTransfer_email || userData?.email} )`}
+            {userData?.payout_method} {userData?.payout_method == 'eTransfer' && `( ${userData?.eTransfer_email || `Not set, default: ${userData?.email}`} )`}
           </li>
         </ul>
       ) : (
