@@ -7,11 +7,49 @@ import { updateIsWarehouse } from '../../../../api/locations/updateIsWarehouse'
 
 const optionsType = ['shipping', 'dropoff', 'both']
 
+const days_of_week = [
+  { title: 'Monday', name: 'monday' },
+  { title: 'Tuesday', name: 'tuesday' },
+  { title: 'Wednesday', name: 'wednesday' },
+  { title: 'Thursday', name: 'thursday' },
+  { title: 'Friday', name: 'friday' },
+  { title: 'Saturday', name: 'saturday' },
+  { title: 'Sunday', name: 'sunday' }
+]
+
 export const ItemLocation = ({ item, locations, setLocations }) => {
   const [editData, setEditData] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [viewHours, setViewHours] = useState(false)
+  const [editHours, setEditHours] = useState({})
   const handleChange = e =>
     setEditData({ ...editData, [e.target.name]: e.target.value })
+
+  const handleUpdateHours = async () => {
+    setLoading(true)
+    const token = localStorage.getItem('tokenAdmin')
+    const update = await updateLocation(token, {
+      store_hours: { ...item?.store_hours, ...editHours },
+      id: item?.id
+    })
+    console.log({ update })
+    if (update?.ok) {
+      const new_locations = locations?.map(el =>
+        el.id == item.id
+          ? {
+              ...el,
+              store_hours: editHours
+            }
+          : el
+      )
+      console.log({ new_locations })
+      setLocations([...new_locations])
+      setLoading(false)
+    } else window.alert('Try again update!')
+    setEditHours({})
+  }
+
+  console.log({locations})
 
   const handleUpdate = async () => {
     setLoading(true)
@@ -20,6 +58,7 @@ export const ItemLocation = ({ item, locations, setLocations }) => {
       latitude: editData?.latitude,
       long: editData?.longitude,
       type: editData?.type,
+      store_hours: item?.store_hours || null,
       id: item?.id
     })
 
@@ -73,7 +112,8 @@ export const ItemLocation = ({ item, locations, setLocations }) => {
     if (confirm) {
       const token = localStorage.getItem('tokenAdmin')
       const changeUpdate = await updateLocationEnabled(token, {
-        _id: item?._id, enabled: !item?.enabled_for_sale
+        _id: item?._id,
+        enabled: !item?.enabled_for_sale
       })
       if (changeUpdate?.ok) {
         const new_locations = locations?.map(el =>
@@ -87,11 +127,16 @@ export const ItemLocation = ({ item, locations, setLocations }) => {
   }
 
   const updateWarehouse = async () => {
-    const confirm = window.confirm('Are you sure you want to change so that the location ' + item?.name + ' is considered Warehouse?')
+    const confirm = window.confirm(
+      'Are you sure you want to change so that the location ' +
+        item?.name +
+        ' is considered Warehouse?'
+    )
     if (confirm) {
       const token = localStorage.getItem('tokenAdmin')
       const changeUpdate = await updateIsWarehouse(token, {
-        _id: item?._id, is_warehouse: !item?.is_warehouse
+        _id: item?._id,
+        is_warehouse: !item?.is_warehouse
       })
       if (changeUpdate?.ok) {
         const new_locations = locations?.map(el =>
@@ -104,9 +149,8 @@ export const ItemLocation = ({ item, locations, setLocations }) => {
     }
   }
 
-
   return (
-    <li>
+    <li style={{ position: 'relative' }}>
       <BiWifi
         className='wifi_icon'
         style={{ color: item?.is_online ? '#FA6C2C' : 'gainsboro' }}
@@ -187,6 +231,57 @@ export const ItemLocation = ({ item, locations, setLocations }) => {
               </option>
             ))}
           </select>
+        )}
+      </div>
+      <div className='container_storeHours'>
+        <h4>Store Hours: </h4>
+        <span style={{ marginLeft: 10 }} onClick={() => setViewHours(true)}>
+          View
+        </span>
+        {viewHours && (
+          <ul>
+            <li onClick={() => setViewHours(false)}>X</li>
+            {days_of_week?.map(el => (
+              <li key={el.name}>
+                <span style={{ fontSize: 15 }}>
+                  {el.title}:{' '}
+                  {editHours[el.name] === undefined ? (
+                    item.store_hours ? (
+                      item.store_hours[el.name] || '--'
+                    ) : (
+                      '--'
+                    )
+                  ) : (
+                    <input
+                      type='text'
+                      value={editHours[el.name]}
+                      onChange={e =>
+                        setEditHours({ [el.name]: e.target.value })
+                      }
+                    />
+                  )}
+                </span>
+                {editHours[el.name] === undefined ? (
+                  <span
+                    onClick={() =>
+                      setEditHours({
+                        [el.name]: item?.store_hours
+                          ? item.store_hours[el.name] || '-'
+                          : '-'
+                      })
+                    }
+                  >
+                    Edit
+                  </span>
+                ) : (
+                  !loading ? <div className='buttons_accept_cancel_hours'>
+                    <button onClick={handleUpdateHours}>A</button>
+                    <button onClick={() => setEditHours({})}>X</button>
+                  </div> : <span>Loading...</span>
+                )}
+              </li>
+            ))}
+          </ul>
         )}
       </div>
       <div className='item_latitude_long'>

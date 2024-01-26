@@ -1586,6 +1586,70 @@ font-size:22px;
     font-weight:700;
 }
 
+.container_storeHours ul{
+    position:absolute;
+    top:0;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 32px;
+    left:0;
+    width: 100%;
+    z-index:10000;
+    background-color: white;
+}
+
+.container_storeHours ul li:first-child{
+    background-color: inherit !important;
+    border:none !important;
+    box-shadow: none !important;
+    text-align: center !important;
+    color:#FA6C2C;
+    font-weight: bold;
+    padding:15px !important;
+    padding-bottom: 5px !important;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.container_storeHours ul li{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.container_storeHours ul li span:last-child{
+    cursor: pointer;
+    color:#FA6C2C;
+}
+
+.buttons_accept_cancel_hours button{
+    padding:5px !important;
+    margin:0 !important;
+    margin-left:5px !important;
+}
+
+.container_storeHours ul li input{
+    border:none;
+    padding:5px;
+    border-bottom:2px solid #FA6C2C;
+    color: #004478;
+    font-weight: bold;
+    outline:none;
+    width: 100%;
+}
+
+.container_storeHours ul li {
+    padding:20px 15px !important;
+}
+
+.buttons_accept_cancel_hours{
+    margin: 0 !important;
+}
+
 .format_createdAt span{
     font-size:14px;
     color:darkblue !important;
