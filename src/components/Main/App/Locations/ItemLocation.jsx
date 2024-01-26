@@ -36,10 +36,7 @@ export const ItemLocation = ({ item, locations, setLocations }) => {
     if (update?.ok) {
       const new_locations = locations?.map(el =>
         el.id == item.id
-          ? {
-              ...el,
-              store_hours: editHours
-            }
+          ? update.data
           : el
       )
       console.log({ new_locations })
