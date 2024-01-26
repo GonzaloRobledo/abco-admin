@@ -46,8 +46,6 @@ export const ItemLocation = ({ item, locations, setLocations }) => {
     setEditHours({})
   }
 
-  console.log({locations})
-
   const handleUpdate = async () => {
     setLoading(true)
     const token = localStorage.getItem('tokenAdmin')
@@ -59,7 +57,6 @@ export const ItemLocation = ({ item, locations, setLocations }) => {
       id: item?.id
     })
 
-    console.log({ update })
     if (update?.ok) {
       const new_locations = locations?.map(el =>
         el.id == item.id
@@ -232,7 +229,7 @@ export const ItemLocation = ({ item, locations, setLocations }) => {
       </div>
       <div className='container_storeHours'>
         <h4>Store Hours: </h4>
-        <span style={{ marginLeft: 10 }} onClick={() => setViewHours(true)}>
+        <span style={{ marginLeft: 10, cursor:'pointer' }} onClick={() => setViewHours(true)}>
           View
         </span>
         {viewHours && (
