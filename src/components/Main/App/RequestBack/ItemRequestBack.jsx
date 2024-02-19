@@ -33,15 +33,25 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+//   if(item.selling.user_id == 'gonzaroble2@gmail.com') console.log({item});
+
   const getOrd = async () => {
     const token = localStorage.getItem('tokenAdmin')
     const order =
       item?.type_request == 'shipping'
         ? await getDraftOrder(token, item?.order_id)
         : await getOrder(token, item?.order_id)
-    if (order?.ok)
-      setOrder(order?.data?.draft_order || order?.data?.order || '')
-    console.log({ order })
+    if (order?.ok){
+        console.log(order)
+        if(order?.data?.draft_order?.status == 'completed'){
+            const d_order = order.data.draft_order;
+            const real_order = await getOrder(token, d_order.order_id);
+            setOrder({...order?.data?.draft_order, name: real_order?.data?.order?.order_number} || '')
+        }else{
+            setOrder(order?.data?.draft_order || order?.data?.order || '')
+        }
+    }
+    // if(item.selling.user_id == 'gonzaroble2@gmail.com') console.log({order});
   }
 
   const handleEditShipping = async () => {
@@ -216,7 +226,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
   return (
     <li
       className={`item_request_back ${
-        item?.payment_complete ? 'bg_paid' : 'bg_not_paid'
+        item?.payment_complete || order.status == 'completed' ? 'bg_paid' : 'bg_not_paid'
       }`}
     >
       <div>
@@ -294,11 +304,11 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
             }}
           >
             <p>${item?.amount_to_shipping}</p>
-            <AiOutlineEdit
+             {order?.status !== 'completed' && <AiOutlineEdit
               style={{ color: !item?.complete_payment ? '#FFFF00' : '' }}
               className='edit_item_request'
               onClick={() => setEditShipping(item?.amount_to_shipping)}
-            />
+            />}
           </div>
         ) : (
           <div className='edit_transport edit_shipping'>
@@ -330,6 +340,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
       <div>{item?.type_request == 'pickup' ? <p>{item?.date}</p> : 'NO'}</div>
 
       <div>
+        {order?.status == 'completed' && <p style={{fontWeight:'bold', marginBottom:5}}>PAID!</p>}
         <button className='btn_create_order' onClick={handleToggleModal}>
           {!order ? 'Create Order' : 'View order'}
         </button>
@@ -434,9 +445,9 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
             <div className='data_create_order data_order'>
               <div>
                 <h5>
-                  {item?.type_request == 'shipping' && 'Draft'} Order ID:{' '}
+                  {item?.type_request == 'shipping' && order?.status !== 'completed' && 'Draft'} Order ID:{' '}
                 </h5>
-                <p>{order?.id}</p>
+                <p>{order?.status !== 'completed' ? order?.id : order?.order_id}</p>
               </div>
               <div>
                 <h5>Code in Shopify: </h5>
@@ -445,7 +456,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
               {item?.type_request == 'shipping' && (
                 <div>
                   <h5>Status: </h5>
-                  <p>{order.status}</p>
+                  <p style={{textTransform:'uppercase', color: order?.status == 'completed' ? 'green' : 'red', fontWeight:'bold'}}>{order.status}</p>
                 </div>
               )}
               <div>
@@ -537,7 +548,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
                 <h5>Note: </h5>
                 <p>{order?.note}</p>
               </div>
-              <div className='buttons_order_detail'>
+              {order.status!=='completed' && <div className='buttons_order_detail'>
                 {item?.type_request == 'shipping' ? (
                   <>
                     <button onClick={handleDeleteOrder}>
@@ -559,7 +570,7 @@ export const ItemRequestBack = ({ item, requestBack, setRequestBack }) => {
                     {loadingDelete ? 'Loading...' : 'Delete order'}
                   </button>
                 )}
-              </div>
+              </div>}
             </div>
           )}
         </Modal>
